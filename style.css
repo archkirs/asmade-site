@@ -52,9 +52,9 @@ a {
   top: 0;
   z-index: 10;
   min-height: 76px;
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) auto minmax(260px, 1fr);
   align-items: center;
-  justify-content: space-between;
   gap: 24px;
   padding: 18px 42px;
   background: rgba(244, 247, 251, 0.92);
@@ -65,6 +65,7 @@ a {
 .brand {
   display: flex;
   align-items: center;
+  justify-self: start;
   gap: 12px;
   text-decoration: none;
   font-weight: 700;
@@ -98,6 +99,7 @@ a {
 .nav {
   display: flex;
   align-items: center;
+  justify-self: center;
   gap: 24px;
   color: var(--muted);
   font-size: 14px;
@@ -125,6 +127,10 @@ a {
   font-weight: 700;
   font-size: 14px;
   box-shadow: 0 12px 30px rgba(31, 94, 255, 0.22);
+}
+
+.top-button {
+  justify-self: end;
 }
 
 .top-button:hover,
@@ -727,9 +733,16 @@ body.registry-page {
   }
 
   .topbar {
+    display: flex;
     align-items: flex-start;
     flex-direction: column;
     padding: 18px 22px;
+  }
+
+  .brand,
+  .nav,
+  .top-button {
+    justify-self: auto;
   }
 
   .nav {
