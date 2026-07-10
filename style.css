@@ -666,4 +666,21 @@ html {
   #faq {
     scroll-margin-top: 95px;
   }
+  .topbar {
+  position: static;
+  top: auto;
+  z-index: auto;
+}
+
+html {
+  scroll-padding-top: 24px;
+}
+
+#about,
+#how,
+#samples,
+#pilot,
+#guidelines,
+#faq {
+  scroll-margin-top: 24px;
 }
