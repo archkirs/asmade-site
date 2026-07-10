@@ -640,5 +640,30 @@ h3 {
     font-size: 38px;
     line-height: 1.04;
   }
+html {
+  scroll-padding-top: 110px;
 }
+
+#about,
+#how,
+#samples,
+#pilot,
+#guidelines,
+#faq {
+  scroll-margin-top: 110px;
+}
+
+@media (max-width: 640px) {
+  html {
+    scroll-padding-top: 95px;
+  }
+
+  #about,
+  #how,
+  #samples,
+  #pilot,
+  #guidelines,
+  #faq {
+    scroll-margin-top: 95px;
+  }
 }
