@@ -621,6 +621,49 @@ body.creator-page {
   color: #ead7c1;
 }
 
+
+/* Registry landing theme */
+
+body.registry-page {
+  --bg: #f6f4fb;
+  --paper: #ffffff;
+  --ink: #181326;
+  --muted: #6c6478;
+  --line: #ded6ec;
+  --blue: #6d28d9;
+  --blue-dark: #581c87;
+  --soft-blue: #eee7ff;
+  --shadow: 0 24px 70px rgba(88, 28, 135, 0.11);
+}
+
+.registry-page .topbar {
+  background: rgba(246, 244, 251, 0.92);
+}
+
+.registry-page .top-button,
+.registry-page .primary-button {
+  box-shadow: 0 12px 30px rgba(109, 40, 217, 0.22);
+}
+
+.registry-page .record-footer,
+.registry-page .sample-links,
+.registry-page .step-card,
+.registry-page .limits-row span {
+  background: #fbf9ff;
+}
+
+.registry-page .faq-block {
+  background: #181326;
+}
+
+.registry-page .faq-block .blue-label {
+  color: #c4b5fd;
+}
+
+.registry-page .faq-block p {
+  color: #ded6ec;
+}
+
 /* Limits */
 
 .limits-row {
