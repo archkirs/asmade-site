@@ -623,4 +623,22 @@ h3 {
     border-right: 0;
     border-bottom: 1px solid var(--line);
   }
+  @media (max-width: 640px) {
+  .top-button {
+    display: none;
+  }
+
+  .hero-stage {
+    margin-top: 24px;
+  }
+
+  .hero-copy {
+    padding-top: 10px;
+  }
+
+  h1 {
+    font-size: 38px;
+    line-height: 1.04;
+  }
+}
 }
