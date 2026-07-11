@@ -180,9 +180,10 @@ h3 { margin-bottom: 10px; font-size: 18px; letter-spacing: -0.02em; }
 .cta-helper {
   max-width: 680px;
   margin: 13px 0 0;
-  color: var(--muted);
-  font-size: 13px;
-  line-height: 1.48;
+  color: color-mix(in srgb, var(--muted) 70%, var(--ink));
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.55;
 }
 .micro-note {
   display: flex;
@@ -190,8 +191,10 @@ h3 { margin-bottom: 10px; font-size: 18px; letter-spacing: -0.02em; }
   align-items: flex-start;
   max-width: 670px;
   margin: 14px 0 0;
-  color: var(--muted);
+  color: color-mix(in srgb, var(--muted) 70%, var(--ink));
   font-size: 14px;
+  font-weight: 500;
+  line-height: 1.5;
 }
 .micro-note span {
   flex: 0 0 auto;
