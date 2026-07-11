@@ -3,280 +3,101 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Student Work Record — Pilot Product</title>
-  <meta name="description" content="Used AI for a school project? Show your part clearly with a short process record for your teacher." />
+  <title>For Students — Human Contribution Record</title>
+  <meta name="description" content="Used AI for a school project? Create a short record that shows your decisions, drafts, sources, AI use, and final work." />
   <link rel="stylesheet" href="style.css" />
 </head>
-
 <body class="student-page">
-  <header class="topbar">
-    <a class="brand" href="index.html" aria-label="Student Work Record home">
-      <span class="brand-code">STU</span>
-      <span class="brand-divider" aria-hidden="true"></span>
-      <span class="brand-title">Student Work Record</span>
-    </a>
-
-    <nav class="nav" aria-label="Primary navigation">
-      <a href="index.html">Home</a>
-      <a href="student.html">Students</a>
-      <a href="artist.html">Creators</a>
-      <a href="reviewer.html">Reviewers</a>
-      <a href="#pilot">Pilot</a>
-    </nav>
-
-    <a class="top-button" href="https://tally.so/r/J9YvzJ?landing=student" target="_blank" rel="noopener">
-      Request a pilot record
-    </a>
+  <header class="site-header">
+    <div class="topbar">
+      <a class="brand" href="index.html" aria-label="Human Contribution Record home">
+        <span class="brand-code">HCR</span>
+        <span class="brand-copy"><strong>Human Contribution Record</strong><small>For students</small></span>
+      </a>
+      <nav class="nav" aria-label="Primary navigation">
+        <a href="index.html">Home</a>
+        <a class="active" aria-current="page" href="student.html">Students</a>
+        <a href="artist.html">Creative Work</a>
+        <a href="reviewer.html">Reviewers</a>
+        <a href="#pilot">Pilot</a>
+      </nav>
+      <a class="top-button" href="https://tally.so/r/J9YvzJ?landing=student" target="_blank" rel="noopener">Join the student pilot</a>
+    </div>
   </header>
 
-  <main id="top">
+  <main>
     <section class="hero-stage" aria-labelledby="hero-title">
       <div class="hero-copy">
-        <p class="blue-label">Students / honest AI-use record</p>
-        <h1 id="hero-title">Used AI for a school project? Show your part clearly.</h1>
-        <p class="hero-lede">
-          A Human Contribution Record helps a teacher see what you did, how AI helped, and what materials support your process.
-        </p>
-        <a class="primary-button" href="https://tally.so/r/J9YvzJ?landing=student" target="_blank" rel="noopener">
-          Request a pilot record
-        </a>
-        <p class="micro-note">
-          <span aria-hidden="true">i</span>For honest process sharing when AI use was allowed or must be explained.
-        </p>
+        <p class="section-label">For students</p>
+        <h1 id="hero-title">Used AI for a school project? Show your teacher what you did.</h1>
+        <p class="hero-lede">A short record can show your decisions, drafts, sources, AI use, and final work.</p>
+        <a class="primary-button" href="https://tally.so/r/J9YvzJ?landing=student" target="_blank" rel="noopener">Join the student pilot</a>
+        <p class="micro-note"><span aria-hidden="true">i</span>For school work where AI use was allowed or must be explained. Not a grade decision.</p>
       </div>
 
-      <aside class="record-card" aria-label="Student Work Record preview">
+      <aside class="record-card" aria-label="Example student record preview">
         <div class="record-head">
-          <div class="doc-symbol" aria-hidden="true">
-            <svg viewBox="0 0 44 54" role="img">
-              <path d="M8 3h20l8 8v40H8V3Z" />
-              <path d="M28 3v11h8" />
-              <path d="M15 25h14" />
-              <path d="M15 32h14" />
-              <path d="M15 39h10" />
-            </svg>
-          </div>
-          <span class="record-head-rule" aria-hidden="true"></span>
-          <div class="record-title">Student Work Record</div>
-          <div class="record-status"><span>Status</span><b><i></i>Manual pilot</b></div>
+          <div><p class="demo-label">Example preview</p><h2>Student Work Record</h2></div>
+          <span class="status-badge">Example only</span>
         </div>
-
         <dl class="record-table">
-          <div>
-            <dt>Assignment:</dt>
-            <dd>essay, report, project, or presentation</dd>
-          </div>
-          <div>
-            <dt>What you did:</dt>
-            <dd>topic, structure, sources, edits, final choices</dd>
-          </div>
-          <div>
-            <dt>How AI helped:</dt>
-            <dd>research, outline, feedback, wording, revision</dd>
-          </div>
-          <div>
-            <dt>Materials:</dt>
-            <dd>brief, drafts, notes, prompts, screenshots</dd>
-          </div>
-          <div>
-            <dt>Limits:</dt>
-            <dd>not grading advice, not proof of originality</dd>
-          </div>
+          <div><dt>Assignment</dt><dd>Essay, report, project, or presentation</dd></div>
+          <div><dt>Student decisions</dt><dd>Topic, structure, sources, edits, and final choices</dd></div>
+          <div><dt>How AI helped</dt><dd>Research, outline, feedback, wording, or revision</dd></div>
+          <div><dt>Materials</dt><dd>Brief, drafts, notes, prompts, and versions</dd></div>
         </dl>
-
         <div class="record-footer">
-          <div><strong>Record ID:</strong><br>PILOT-STUDENT-0002</div>
-          <div><strong>Format:</strong><br>Student v0.3 Pilot</div>
-          <div><strong>Reviewer:</strong><br>teacher or course reviewer</div>
+          <div><strong>Record ID</strong><span>DEMO-STUDENT-0001</span></div>
+          <div><strong>Reviewer</strong><span>Teacher or course reviewer</span></div>
         </div>
       </aside>
     </section>
 
-    <section id="send-get" class="content-block split-block">
+    <section class="content-block problem-block" aria-labelledby="problem-title">
+      <div><p class="section-label">When this helps</p><h2 id="problem-title">A final assignment does not show how it was made.</h2></div>
+      <div class="plain-copy"><p>A teacher may need more than the final file, but a long raw AI chat is difficult to review.</p><p>A short record shows the main decisions and materials in one place.</p></div>
+    </section>
+
+    <section class="content-block split-block" aria-labelledby="provide-title">
       <div>
-        <p class="blue-label">What you send / what you get</p>
-        <h2>Turn scattered school materials into one short record.</h2>
-        <p>
-          The record helps explain the process. It does not promise that a teacher will accept the work.
-        </p>
+        <p class="section-label">What goes in</p>
+        <h2 id="provide-title">Use the materials you already have.</h2>
+        <p>The record is based on materials provided by the student. It helps explain the process, but it is not independent proof and does not guarantee acceptance or a grade.</p>
       </div>
-
-      <div class="two-card-stack">
-        <div class="mini-card">
-          <h3>You can include</h3>
-          <ul>
-            <li>assignment brief</li>
-            <li>final file</li>
-            <li>AI chats or prompts</li>
-            <li>outline, drafts, notes, version history</li>
-          </ul>
-        </div>
-        <div class="mini-card">
-          <h3>The record shows</h3>
-          <ul>
-            <li>what you decided</li>
-            <li>how AI helped</li>
-            <li>what evidence exists</li>
-            <li>what the record cannot prove</li>
-          </ul>
-        </div>
+      <div class="paired-lists">
+        <article class="mini-card"><h3>You provide</h3><ul><li>assignment brief and final file</li><li>AI chats or prompts</li><li>outline, drafts, and notes</li><li>sources, screenshots, or version history</li></ul></article>
+        <article class="mini-card"><h3>The record shows</h3><ul><li>what you decided</li><li>how AI helped</li><li>what drafts and sources exist</li><li>what still needs teacher review</li></ul></article>
       </div>
     </section>
 
-    <section id="about" class="content-block">
-      <p class="blue-label">When this helps</p>
-      <h2>Your teacher may not want only the final file.</h2>
-      <p>
-        They may also want to understand how you worked.
-      </p>
-      <p>
-        A short record can show your role and your AI use in a simple way.
-      </p>
-    </section>
-
-    <section id="record" class="content-block split-block">
-      <div>
-        <p class="blue-label">What the record can show</p>
-        <h2>Clear process context for a teacher.</h2>
-        <p>
-          The record is not a grade decision. It is a short explanation of the student process.
-        </p>
-      </div>
-
-      <div class="sample-links">
-        <h3>Possible fields</h3>
-        <div class="list-item">Assignment title <span>what work is being reviewed</span></div>
-        <div class="list-item">Student decisions <span>planning, judgment, edits, final choices</span></div>
-        <div class="list-item">AI help used <span>what AI helped with and where</span></div>
-        <div class="list-item">Limits <span>what still needs teacher review</span></div>
-      </div>
-    </section>
-
-    <section id="how" class="steps-section" aria-labelledby="how-title">
-      <h2 id="how-title">How it works</h2>
-
+    <section id="how" class="content-block" aria-labelledby="how-title">
+      <p class="section-label">How it works</p>
+      <h2 id="how-title">From assignment to short process record.</h2>
       <div class="steps-grid">
-        <article class="step-card">
-          <div class="icon-circle" aria-hidden="true">
-            <svg viewBox="0 0 48 48"><path d="M13 6h20l7 7v31H13V6Z"/><path d="M33 6v10h7"/><path d="M20 25h14"/><path d="M20 32h14"/><path d="M20 39h9"/></svg>
-          </div>
-          <div class="step-line"><span>1</span><h3>Start with the assignment</h3></div>
-          <p>Use it for school work where AI was allowed or where AI use must be explained.</p>
-          <b>Assignment</b>
-        </article>
-        <article class="step-card">
-          <div class="icon-circle" aria-hidden="true">
-            <svg viewBox="0 0 48 48"><path d="M7 19h34l-4 20H11L7 19Z"/><path d="M11 19v-8h12l4 5h10v3"/></svg>
-          </div>
-          <div class="step-line"><span>2</span><h3>Add process materials</h3></div>
-          <p>Add AI chats, prompts, drafts, notes, outlines, source lists, screenshots, or version history.</p>
-          <b>Process</b>
-        </article>
-        <article class="step-card">
-          <div class="icon-circle" aria-hidden="true">
-            <svg viewBox="0 0 48 48"><path d="M13 6h20l7 7v31H13V6Z"/><path d="M33 6v10h7"/><path d="M20 25h14"/><path d="M20 32h14"/><path d="M20 39h9"/></svg>
-          </div>
-          <div class="step-line"><span>3</span><h3>Create a short record</h3></div>
-          <p>The record summarizes your decisions, AI help, submitted materials, and limits.</p>
-          <b>Record</b>
-        </article>
-        <article class="step-card">
-          <div class="icon-circle" aria-hidden="true">
-            <svg viewBox="0 0 48 48"><path d="M19 15 9 24l10 9"/><path d="m29 15 10 9-10 9"/><path d="m27 11-6 26"/></svg>
-          </div>
-          <div class="step-line"><span>4</span><h3>Share with a teacher</h3></div>
-          <p>Your teacher can review a clear summary instead of a long raw AI chat.</p>
-          <b>Review</b>
-        </article>
+        <article class="step-card"><span>1</span><h3>Start with the assignment</h3><p>Use school work where AI was allowed or must be explained.</p></article>
+        <article class="step-card"><span>2</span><h3>Add process materials</h3><p>Add the drafts, notes, prompts, sources, screenshots, and versions that already exist.</p></article>
+        <article class="step-card"><span>3</span><h3>Create the record</h3><p>Your decisions, AI use, materials, and limits are summarized clearly.</p></article>
+        <article class="step-card"><span>4</span><h3>Share with a teacher</h3><p>Your teacher reviews the summary and asks for more information if needed.</p></article>
       </div>
     </section>
 
-    <section class="trust-strip" aria-label="Student record principles">
-      <div class="trust-item">
-        <span class="trust-icon" aria-hidden="true"><svg viewBox="0 0 40 40"><path d="M20 4 33 10v10c0 9-6 14-13 16C13 34 7 29 7 20V10l13-6Z"/><path d="m13 20 5 5 10-12"/></svg></span>
-        <p><strong>What you did</strong><br>Shows topic choice, structure, sources, edits, and final approval.</p>
-      </div>
-      <div class="trust-item">
-        <span class="trust-icon" aria-hidden="true"><svg viewBox="0 0 40 40"><path d="M11 5h18v30H11z"/><path d="M16 13h8"/><path d="M16 20h8"/><path d="M16 27h5"/></svg></span>
-        <p><strong>How AI helped</strong><br>Summarizes AI support with research, outlining, feedback, language, or revision.</p>
-      </div>
-      <div class="trust-item">
-        <span class="trust-icon" aria-hidden="true"><svg viewBox="0 0 40 40"><path d="M10 18h20v16H10z"/><path d="M15 18v-5a5 5 0 0 1 10 0v5"/><path d="M20 24v4"/></svg></span>
-        <p><strong>Drafts and notes</strong><br>Organizes prompts, notes, screenshots, versions, and references.</p>
-      </div>
-      <div class="trust-item">
-        <span class="trust-icon" aria-hidden="true"><svg viewBox="0 0 40 40"><path d="M15 17a5 5 0 1 0 0-10 5 5 0 0 0 0 10Z"/><path d="M5 34v-4a10 10 0 0 1 20 0v4"/><path d="M29 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/><path d="M27 24a8 8 0 0 1 8 8v2"/></svg></span>
-        <p><strong>Clear limits</strong><br>States what still requires teacher review and what the record does not prove.</p>
-      </div>
+    <section id="samples" class="content-block split-block" aria-labelledby="samples-title">
+      <div><p class="section-label">Sample record</p><h2 id="samples-title">The student sample is being prepared.</h2><p>It will show an assignment, the student’s decisions, declared AI help, drafts, sources, and clear limits.</p></div>
+      <div class="sample-status"><div><strong>Student assignment sample</strong><span>Coming before the demand test</span></div></div>
     </section>
 
-    <section id="samples" class="content-block split-block">
-      <div>
-        <p class="blue-label">Samples</p>
-        <h2>Student sample records are being prepared.</h2>
-        <p>
-          They will show how a student record can summarize the assignment, AI help, drafts, notes, and limits.
-        </p>
-      </div>
-
-      <div class="sample-links">
-        <h3>Coming soon</h3>
-        <div class="list-item muted-card">Student essay record <span>assignment, outline, AI help, drafts</span></div>
-        <div class="list-item muted-card">Student project record <span>notes, final file, screenshots, limits</span></div>
-      </div>
+    <section id="limits" class="content-block limits-block" aria-labelledby="limits-title">
+      <p class="section-label">Limits</p>
+      <h2 id="limits-title">A process record supports teacher review.</h2>
+      <div class="limits-row"><span>Not an AI detector</span><span>Not a grade decision</span><span>Not proof of originality</span><span>Does not replace teacher judgment</span></div>
     </section>
 
-    <section id="pilot" class="content-block split-block">
-      <div>
-        <p class="blue-label">Manual pilot</p>
-        <h2>Request a student pilot record.</h2>
-        <p>
-          This pilot tests whether a short record can help students and teachers discuss allowed AI use more clearly.
-        </p>
-        <p>
-          Please do not upload confidential, private, legal, school-restricted, or sensitive materials at this stage.
-        </p>
-        <a class="primary-button small" href="https://tally.so/r/J9YvzJ?landing=student" target="_blank" rel="noopener">
-          Request a pilot record
-        </a>
-      </div>
-
-      <div class="sample-links">
-        <h3>This may help when</h3>
-        <div class="list-item">AI use was allowed <span>but the process still needs explanation</span></div>
-        <div class="list-item">AI use must be explained <span>and a long chat is too hard to review</span></div>
-        <div class="list-item">Drafts already exist <span>but they are scattered across files and tools</span></div>
-      </div>
-    </section>
-
-    <section id="guidelines" class="content-block">
-      <p class="blue-label">What this is not</p>
-      <h2>Honest process sharing, not a shortcut around rules.</h2>
-      <div class="limits-row">
-        <span>Not a cheating detector</span>
-        <span>Not an automatic grade decision</span>
-        <span>Not academic certification</span>
-        <span>Not legal certification</span>
-        <span>Not proof of originality</span>
-        <span>Not a punishment system</span>
-      </div>
-    </section>
-
-    <section id="faq" class="content-block faq-block">
-      <p class="blue-label">FAQ</p>
-      <h2>A review aid, not an automatic judgment.</h2>
-      <p>
-        The record is based on materials the student provides. It does not decide whether a teacher should accept the work, assign a grade, or make an academic integrity decision.
-      </p>
-      <p>
-        It only helps show the work process in a clear, short format.
-      </p>
+    <section id="pilot" class="content-block final-cta" aria-labelledby="pilot-title">
+      <div><p class="section-label">Student pilot</p><h2 id="pilot-title">Test a clearer way to explain allowed AI use.</h2><p>Tell us what type of school work you may need to document and who would review it.</p></div>
+      <a class="primary-button" href="https://tally.so/r/J9YvzJ?landing=student" target="_blank" rel="noopener">Join the student pilot</a>
     </section>
   </main>
 
-  <footer class="footer">
-    <p>Based on research by Eyeball Publishing Lab. AI Work Verification — Product MVP is a separate product exploration.</p>
-    <p><a href="index.html">Home</a> · <a href="student.html">Students</a> · <a href="artist.html">Creators</a> · <a href="reviewer.html">Reviewers</a> · Contact: <a href="mailto:eyeballpublishinglab@gmail.com">eyeballpublishinglab@gmail.com</a></p>
-  </footer>
+  <footer class="footer"><p><strong>Human Contribution Record</strong> — student use case.</p></footer>
 </body>
 </html>
