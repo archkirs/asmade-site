@@ -11,7 +11,6 @@
   --shadow: 0 20px 60px rgba(19, 33, 68, 0.09);
   --radius: 24px;
 }
-
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; scroll-padding-top: 112px; }
 body {
@@ -21,9 +20,6 @@ body {
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   line-height: 1.5;
 }
-a { color: inherit; }
-img, svg { max-width: 100%; }
-
 body.student-page {
   --bg: #f2f8f6;
   --ink: #10201d;
@@ -57,7 +53,7 @@ body.reviewer-page {
   --soft-panel: #fbf9ff;
   --shadow: 0 20px 60px rgba(88, 28, 135, 0.08);
 }
-
+a { color: inherit; }
 .site-header {
   position: sticky;
   top: 0;
@@ -71,7 +67,7 @@ body.reviewer-page {
   min-height: 76px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: minmax(250px, 1fr) auto minmax(245px, 1fr);
+  grid-template-columns: minmax(220px, 1fr) auto minmax(245px, 1fr);
   grid-template-areas: "brand nav cta";
   align-items: center;
   gap: 24px;
@@ -95,11 +91,11 @@ body.reviewer-page {
   background: var(--paper);
   color: var(--accent);
   font-size: 13px;
-  font-weight: 800;
+  font-weight: 850;
   letter-spacing: 0.08em;
 }
-.brand-copy { display: grid; gap: 1px; }
-.brand-copy strong { font-size: 15px; line-height: 1.2; }
+.brand-copy { display: grid; gap: 1px; min-width: 0; }
+.brand-copy strong { font-size: 17px; line-height: 1.15; letter-spacing: -0.025em; }
 .brand-copy small { color: var(--muted); font-size: 12px; }
 .nav {
   grid-area: nav;
@@ -157,12 +153,13 @@ main, .footer { width: min(1180px, calc(100% - 40px)); margin-inline: auto; }
 }
 h1, h2, h3, p { margin-top: 0; }
 h1 {
-  max-width: 760px;
+  max-width: 780px;
   margin-bottom: 20px;
   font-size: clamp(42px, 5.6vw, 72px);
   line-height: 1;
   letter-spacing: -0.055em;
 }
+.made-word { color: var(--accent); }
 h2 {
   margin-bottom: 16px;
   font-size: clamp(30px, 3.7vw, 46px);
@@ -171,12 +168,13 @@ h2 {
 }
 h3 { margin-bottom: 10px; font-size: 18px; letter-spacing: -0.02em; }
 .hero-lede {
-  max-width: 680px;
+  max-width: 700px;
   margin-bottom: 24px;
   color: var(--muted);
   font-size: 20px;
   line-height: 1.48;
 }
+.hero-lede strong { color: var(--ink); }
 .cta-helper {
   max-width: 680px;
   margin: 13px 0 0;
@@ -209,7 +207,6 @@ h3 { margin-bottom: 10px; font-size: 18px; letter-spacing: -0.02em; }
   font-size: 12px;
   font-weight: 800;
 }
-
 .record-card {
   overflow: hidden;
   border: 1px solid var(--line);
@@ -225,19 +222,25 @@ h3 { margin-bottom: 10px; font-size: 18px; letter-spacing: -0.02em; }
   padding: 24px;
   border-bottom: 1px solid var(--line);
 }
-.record-head h2 { margin: 0; font-size: 22px; letter-spacing: -0.025em; }
+.record-head h2 { margin: 0; font-size: 25px; letter-spacing: -0.035em; }
 .demo-label { margin-bottom: 5px; }
 .record-table { margin: 0; }
 .record-table div {
   display: grid;
-  grid-template-columns: 155px 1fr;
+  grid-template-columns: 108px 1fr;
   gap: 18px;
-  padding: 15px 24px;
+  padding: 16px 24px;
   border-bottom: 1px solid var(--line);
 }
 .record-table div:last-child { border-bottom: 0; }
-.record-table dt { color: var(--muted); font-size: 13px; }
-.record-table dd { margin: 0; font-size: 14px; font-weight: 700; }
+.record-table dt {
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 850;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.record-table dd { margin: 0; font-size: 14px; font-weight: 650; }
 
 .content-block {
   margin: 24px auto;
@@ -255,7 +258,12 @@ h3 { margin-bottom: 10px; font-size: 18px; letter-spacing: -0.02em; }
   align-items: start;
 }
 .problem-block .plain-copy p:last-child { margin-bottom: 0; }
-.steps-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: 26px; }
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 26px;
+}
 .step-card {
   min-height: 205px;
   padding: 20px;
@@ -343,7 +351,7 @@ h3 { margin-bottom: 10px; font-size: 18px; letter-spacing: -0.02em; }
 .final-cta .primary-button { justify-self: end; }
 .footer { padding: 22px 0 42px; color: var(--muted); font-size: 13px; }
 .footer p { margin: 0; }
-#how, #limits, #pilot { scroll-margin-top: 112px; }
+#made, #how, #limits, #pilot { scroll-margin-top: 112px; }
 
 @media (max-width: 1120px) {
   .topbar {
@@ -352,23 +360,17 @@ h3 { margin-bottom: 10px; font-size: 18px; letter-spacing: -0.02em; }
     gap: 8px 20px;
     padding: 12px 0 10px;
   }
-  .nav {
-    justify-content: flex-start;
-    overflow-x: auto;
-    padding: 2px 0 0;
-    scrollbar-width: thin;
-  }
+  .nav { justify-content: flex-start; overflow-x: auto; padding: 2px 0 0; scrollbar-width: thin; }
   .hero-stage { grid-template-columns: 1fr; gap: 24px; margin-top: 38px; }
   .record-card { max-width: 760px; }
   .steps-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
-
 @media (max-width: 760px) {
   html { scroll-padding-top: 128px; }
-  #how, #limits, #pilot { scroll-margin-top: 128px; }
+  #made, #how, #limits, #pilot { scroll-margin-top: 128px; }
   main, .footer, .topbar { width: min(100% - 24px, 1180px); }
   .top-button { min-height: 40px; padding: 0 14px; font-size: 12px; }
-  .brand-copy strong { font-size: 13px; }
+  .brand-copy strong { font-size: 14px; }
   .brand-copy small { font-size: 11px; }
   .brand-code { width: 42px; height: 34px; }
   .nav { gap: 18px; font-size: 13px; }
@@ -382,7 +384,6 @@ h3 { margin-bottom: 10px; font-size: 18px; letter-spacing: -0.02em; }
   .step-card { min-height: 0; }
   .final-cta .primary-button { justify-self: start; }
 }
-
 @media (max-width: 560px) {
   .topbar { grid-template-columns: minmax(0, 1fr) auto; }
   .brand { gap: 9px; min-width: 0; }
