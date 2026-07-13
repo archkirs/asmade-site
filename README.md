@@ -1,6 +1,13 @@
-# Human Contribution Record landing site
+# AsMade landing site
 
-Static four-page landing system for the Human Contribution Record MVP pilot.
+Static four-page landing system for the AsMade MVP pilot.
+
+## Naming architecture
+
+- **AsMade** — public working MVP brand.
+- **MADE Record** — the structured result prepared for creator review and sharing.
+- **MADE** — Materials, Actions, Decisions, Evolution.
+- **See what MADE it.** — explanatory line used on the general page.
 
 ## Pages
 
@@ -16,10 +23,10 @@ Static four-page landing system for the Human Contribution Record MVP pilot.
 1. A visitor applies through the shared Tally form.
 2. No files are uploaded during the application.
 3. Selected participants use a real, non-confidential project.
-4. The planned MVP prepares a draft Human Contribution Record from submitted work and process materials.
+4. The planned MVP prepares a draft MADE Record from submitted work and process materials.
 5. The creator checks the record before sharing it with a reviewer.
 
-The site does not present the HCR as an AI detector, legal certification, copyright proof, or a replacement for human judgment.
+The site does not present AsMade or a MADE Record as an AI detector, legal certification, copyright proof, or a replacement for human judgment.
 
 ## Tracking values
 
