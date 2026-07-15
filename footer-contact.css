@@ -147,6 +147,9 @@
   background: color-mix(in srgb, var(--accent) 84%, black);
 }
 
+/* The visible CTA replaces the redundant Pilot navigation item on all sizes. */
+.nav a[href="#pilot"] { display: none; }
+
 @media (max-width: 760px) {
   .footer-links { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
   .contact-layout { grid-template-columns: 1fr; gap: 28px; }
@@ -201,13 +204,23 @@
     text-align: center;
   }
 
-  .nav a[href="#pilot"] { display: none; }
-
   .nav a::after {
     left: 8px;
     right: 8px;
     bottom: -1px;
     height: 2px;
+  }
+
+  .record-head .grid-mark {
+    display: grid;
+    grid-template-columns: repeat(4, 3px);
+    gap: 3px;
+    padding: 1px;
+  }
+
+  .record-head .grid-mark i {
+    width: 3px;
+    height: 3px;
   }
 }
 
@@ -222,4 +235,6 @@
   .topbar { width: min(100% - 20px, 1180px); column-gap: 12px; }
   .top-button { padding-inline: 11px; font-size: 10.25px; }
   .nav { font-size: 10.25px; }
+
+  .record-head .grid-mark { display: grid; }
 }
