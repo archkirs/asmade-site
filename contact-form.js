@@ -164,7 +164,7 @@
         requestId = null;
         deliveryUncertain = false;
         status.classList.add('is-error');
-        status.textContent = data.message || 'Check the highlighted fields.';
+        status.textContent = data.errors.form || data.message || 'Check the highlighted fields.';
         return;
       }
 
