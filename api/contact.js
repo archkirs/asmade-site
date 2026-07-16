@@ -1,7 +1,8 @@
 const crypto = require('node:crypto');
 
 const MAX_BODY_BYTES = 16 * 1024;
-const ALLOWED_ORIGIN = 'https://useasmade.com';
+const PRODUCTION_ORIGIN = 'https://useasmade.com';
+const PREVIEW_BRANCH_ORIGIN = 'https://ai-work-verification-site-git-feature-defae9-archkirs-projects.vercel.app';
 const RESEND_URL = 'https://api.resend.com/emails';
 
 const TOPICS = Object.freeze({
@@ -34,6 +35,22 @@ function logResult({ requestId, result, status, startedAt, errorCode }) {
 
 function isPlainObject(value) {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
+}
+
+function getAllowedOrigins() {
+  const origins = new Set([PRODUCTION_ORIGIN]);
+
+  if (process.env.VERCEL_ENV === 'preview') {
+    origins.add(PREVIEW_BRANCH_ORIGIN);
+    if (process.env.VERCEL_BRANCH_URL) origins.add(`https://${process.env.VERCEL_BRANCH_URL}`);
+    if (process.env.VERCEL_URL) origins.add(`https://${process.env.VERCEL_URL}`);
+  }
+
+  return origins;
+}
+
+function isAllowedOrigin(origin) {
+  return typeof origin === 'string' && getAllowedOrigins().has(origin);
 }
 
 async function readBody(req) {
@@ -132,7 +149,7 @@ module.exports = async function contactHandler(req, res) {
     return sendJson(res, 405, { ok: false, message: 'Method not allowed.' });
   }
 
-  if (req.headers.origin !== ALLOWED_ORIGIN) {
+  if (!isAllowedOrigin(req.headers.origin)) {
     logResult({ requestId, result: 'rejected', status: 403, startedAt, errorCode: 'origin_rejected' });
     return sendJson(res, 403, { ok: false, message: 'Request rejected.' });
   }
