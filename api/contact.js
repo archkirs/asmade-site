@@ -132,7 +132,6 @@ function buildEmailText({ name, email, topic, message, requestId }) {
     `Topic: ${TOPICS[topic]}`,
     `Name: ${name || 'Not provided'}`,
     `Email: ${email}`,
-    `Submitted: ${new Date().toISOString()}`,
     '',
     'Message:',
     message,
