@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>AsMade Evidence Preview</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <style>
+    :root { color-scheme: light; font-family: "Onest", "Segoe UI", Arial, sans-serif; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #f5f4f0; color: #191918; }
+    .viewer { width: min(1100px, calc(100% - 32px)); margin: 0 auto; padding: 24px 0 40px; }
+    .viewer-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 18px; }
+    .viewer-head img { width: 78px; height: auto; }
+    .viewer-meta { color: #66645f; font-size: 13px; text-align: right; }
+    .viewer-frame { display: grid; place-items: center; min-height: calc(100vh - 110px); padding: 18px; border: 1px solid #d8d6cf; border-radius: 12px; background: #fff; }
+    .viewer-frame img { display: block; width: auto; max-width: 100%; max-height: calc(100vh - 150px); object-fit: contain; box-shadow: 0 10px 28px rgba(25,25,24,.12); }
+    .viewer-error { color: #66645f; font-size: 15px; }
+    @media (max-width: 600px) {
+      .viewer { width: min(100% - 20px, 1100px); padding-top: 14px; }
+      .viewer-head { align-items: flex-start; }
+      .viewer-frame { min-height: calc(100vh - 90px); padding: 10px; }
+      .viewer-frame img { max-height: calc(100vh - 125px); }
+      .viewer-meta { font-size: 11px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="viewer">
+    <header class="viewer-head">
+      <a href="/" aria-label="AsMade home"><img src="asmade-wordmark.svg" alt="AsMade" width="78" height="15" /></a>
+      <div class="viewer-meta" id="viewer-meta">Approved redacted Evidence preview</div>
+    </header>
+    <section class="viewer-frame" id="viewer-frame" aria-live="polite"></section>
+  </main>
+  <script>
+    (() => {
+      const assets = {
+        'cv-en': {
+          title: 'M2-001 · English CV preview',
+          url: 'https://s3.eu-central-003.backblazeb2.com/asmade-public-presentation-euc1-7f3a9c/public-demo/mr-pilot-cv-001/materials/m2-001/redacted-page-1-v1.webp',
+          alt: 'English page of the approved redacted CV preview; direct contact details removed and authorised portrait retained'
+        },
+        'cv-sr': {
+          title: 'M2-001 · Serbian CV preview',
+          url: 'https://s3.eu-central-003.backblazeb2.com/asmade-public-presentation-euc1-7f3a9c/public-demo/mr-pilot-cv-001/materials/m2-001/redacted-page-2-v1.webp',
+          alt: 'Serbian page of the approved redacted CV preview; direct contact details removed and authorised portrait retained'
+        }
+      };
+
+      const asset = assets[new URLSearchParams(window.location.search).get('asset')];
+      const frame = document.getElementById('viewer-frame');
+      const meta = document.getElementById('viewer-meta');
+
+      if (!asset) {
+        frame.innerHTML = '<p class="viewer-error">This Evidence preview is not available.</p>';
+        return;
+      }
+
+      document.title = `${asset.title} — AsMade`;
+      meta.textContent = asset.title;
+      const image = document.createElement('img');
+      image.src = asset.url;
+      image.alt = asset.alt;
+      frame.appendChild(image);
+    })();
+  </script>
+</body>
+</html>
