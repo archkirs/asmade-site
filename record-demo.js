@@ -64,6 +64,27 @@
       letter-spacing: .06em;
       text-transform: uppercase;
     }
+    .catalogue-item-link {
+      color: var(--ink);
+      font-weight: 600;
+      text-decoration: underline;
+      text-decoration-color: var(--line-strong);
+      text-underline-offset: 3px;
+    }
+    .catalogue-item-link:hover { text-decoration-color: var(--ink); }
+    .catalogue-representation-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 12px;
+      margin-top: 7px;
+    }
+    .catalogue-representation-links a {
+      color: var(--ink);
+      font-weight: 600;
+      text-decoration: underline;
+      text-decoration-color: var(--line-strong);
+      text-underline-offset: 3px;
+    }
     @media (max-width: 760px) {
       .record-file-header {
         gap: 14px;
@@ -118,7 +139,7 @@
         transform-origin: right center;
       }
       .record-file-meta {
-        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        grid-template-columns: minmax(0, .72fr) minmax(0, 1.28fr);
       }
       .record-meta-item:first-child {
         grid-column: 1 / -1;
@@ -132,6 +153,7 @@
         border-left: 0;
       }
       .record-meta-item:nth-child(3) {
+        padding-left: 16px;
         border-top: 0;
         border-left: 1px solid var(--line);
       }
@@ -167,6 +189,29 @@
         's2-004': ['S2-004', 'The available ChatGPT record shows the CV being translated into Serbian and then checked and corrected.', 'The process record contains the translation request, AI output and later checking/correction step.'],
         's2-005': ['S2-005', 'The Creator reviewed the Serbian translation and says he approved the final CV text.', 'The process record supports active Serbian-language review; approval of the complete final text remains Creator-declared.']
       }
+    }
+  };
+
+  const cvWebpToViewer = {
+    'https://s3.eu-central-003.backblazeb2.com/asmade-public-presentation-euc1-7f3a9c/public-demo/mr-pilot-cv-001/materials/m2-001/redacted-page-1-v1.webp': 'evidence-viewer.html?asset=cv-en',
+    'https://s3.eu-central-003.backblazeb2.com/asmade-public-presentation-euc1-7f3a9c/public-demo/mr-pilot-cv-001/materials/m2-001/redacted-page-2-v1.webp': 'evidence-viewer.html?asset=cv-sr'
+  };
+
+  document.querySelectorAll('a[href]').forEach((link) => {
+    const viewerHref = cvWebpToViewer[link.href];
+    if (viewerHref) link.href = viewerHref;
+  });
+
+  const catalogueLinks = {
+    'MR-PILOT-EC-P050-001': {
+      'M-001': 'https://s3.eu-central-003.backblazeb2.com/asmade-public-presentation-euc1-7f3a9c/public-demo/mr-pilot-ec-p050-001/materials/m-001/presentation-v1.png',
+      'M-002': 'https://s3.eu-central-003.backblazeb2.com/asmade-public-presentation-euc1-7f3a9c/public-demo/mr-pilot-ec-p050-001/materials/m-002/presentation-v1.png',
+      'M-003': 'https://s3.eu-central-003.backblazeb2.com/asmade-public-presentation-euc1-7f3a9c/public-demo/mr-pilot-ec-p050-001/materials/m-003/presentation-v1.png',
+      'M-004': 'https://s3.eu-central-003.backblazeb2.com/asmade-public-presentation-euc1-7f3a9c/public-demo/mr-pilot-ec-p050-001/materials/m-004/presentation-v1.png',
+      'M-005': 'https://s3.eu-central-003.backblazeb2.com/asmade-public-presentation-euc1-7f3a9c/public-demo/mr-pilot-ec-p050-001/materials/m-005/presentation-v1.png'
+    },
+    'MR-PILOT-CV-001': {
+      'M2-001': 'https://s3.eu-central-003.backblazeb2.com/asmade-public-presentation-euc1-7f3a9c/public-demo/mr-pilot-cv-001/materials/m2-001/redacted-preview-v1.pdf'
     }
   };
 
@@ -227,6 +272,32 @@
       const limitation = shell.querySelector('[data-record-panel="record"] .record-limitation p');
       if (limitation) limitation.textContent = refinement.limitation;
     }
+
+    const availableLinks = catalogueLinks[recordId] || {};
+    shell.querySelectorAll('.full-catalogue .evidence-row:not(.evidence-row-head)').forEach((row) => {
+      const materialId = row.querySelector('strong')?.textContent.trim();
+      const itemCell = row.children[1];
+      const href = availableLinks[materialId];
+      if (!materialId || !itemCell || !href) return;
+
+      const link = document.createElement('a');
+      link.className = 'catalogue-item-link';
+      link.href = href;
+      link.target = '_blank';
+      link.rel = 'noopener';
+      link.textContent = itemCell.textContent;
+      itemCell.replaceChildren(link);
+
+      if (recordId === 'MR-PILOT-CV-001' && materialId === 'M2-001') {
+        const noteCell = row.children[3];
+        if (noteCell && !noteCell.querySelector('.catalogue-representation-links')) {
+          const representationLinks = document.createElement('div');
+          representationLinks.className = 'catalogue-representation-links';
+          representationLinks.innerHTML = '<a href="evidence-viewer.html?asset=cv-en" target="_blank" rel="noopener">English WebP</a><a href="evidence-viewer.html?asset=cv-sr" target="_blank" rel="noopener">Serbian WebP</a><a href="https://s3.eu-central-003.backblazeb2.com/asmade-public-presentation-euc1-7f3a9c/public-demo/mr-pilot-cv-001/materials/m2-001/redacted-preview-v1.pdf" target="_blank" rel="noopener">Two-page PDF</a>';
+          noteCell.appendChild(representationLinks);
+        }
+      }
+    });
 
     const tabs = Array.from(shell.querySelectorAll('[role="tab"]'));
     const panels = Array.from(shell.querySelectorAll('[role="tabpanel"]'));
