@@ -314,30 +314,63 @@
 
   .nav {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     width: 100%;
     margin-top: 8px;
     border-top: 1px solid var(--line);
     gap: 0;
     overflow: visible;
-    font-size: 10.75px;
-    letter-spacing: -.012em;
-    white-space: normal;
+    font-size: 10px;
+    letter-spacing: -.02em;
+    white-space: nowrap;
   }
 
   .nav a {
     min-width: 0;
-    padding: 10px 3px 11px;
+    padding: 10px 2px 11px;
     line-height: 1.16;
     text-align: center;
   }
 
+  /* Shorter mobile labels keep the five equal navigation cells visually balanced. */
+  .nav a[href$="artist.html"],
+  .nav a[href$="records.html"] { font-size: 0; }
+  .nav a[href$="artist.html"]::before,
+  .nav a[href$="records.html"]::before {
+    font-size: 10px;
+    letter-spacing: -.02em;
+  }
+  .nav a[href$="artist.html"]::before { content: "Creative"; }
+  .nav a[href$="records.html"]::before { content: "Records"; }
+
   .nav a::after {
-    left: 8px;
-    right: 8px;
+    left: 6px;
+    right: 6px;
     bottom: -1px;
     height: 2px;
   }
+
+  /* Keep Record directory navigation on one compact row on phones. */
+  .record-demo-page main > div:first-child {
+    flex-wrap: nowrap !important;
+    gap: 8px !important;
+    align-items: center;
+  }
+
+  .record-demo-page main > div:first-child .record-link-button {
+    min-width: 0;
+    padding-inline: 8px;
+    font-size: 0;
+    white-space: nowrap;
+  }
+
+  .record-demo-page main > div:first-child .record-link-button::before {
+    font-size: 10px;
+  }
+
+  .record-demo-page main > div:first-child .record-link-button[href="records.html"]::before { content: "← All Records"; }
+  .record-demo-page main > div:first-child .record-link-button[href="sample-cv.html"]::before { content: "Next: CV →"; }
+  .record-demo-page main > div:first-child .record-link-button[href="sample-comic.html"]::before { content: "← Previous: Comic"; }
 
   .record-head .grid-mark {
     display: grid;
@@ -364,7 +397,9 @@
 
   .topbar { width: min(100% - 20px, 1180px); column-gap: 12px; }
   .top-button { padding-inline: 11px; font-size: 10.25px; }
-  .nav { font-size: 10.25px; }
+  .nav { font-size: 9.4px; letter-spacing: -.025em; }
+  .nav a[href$="artist.html"]::before,
+  .nav a[href$="records.html"]::before { font-size: 9.4px; }
 
   .record-head .grid-mark { display: grid; }
 }
