@@ -9,28 +9,37 @@
   const style = document.createElement('style');
   style.textContent = `
     .record-file-tabs {
-      gap: 0;
-      overflow-x: visible;
-      overflow-y: hidden;
-      padding: 12px 22px 0;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+      overflow: visible;
+      padding: 10px 24px 0;
       scrollbar-width: none;
     }
     .record-file-tabs::-webkit-scrollbar { display: none; }
     .record-file-tab {
-      min-width: 142px;
-      margin-right: -1px;
-      padding: 14px 24px 13px;
+      width: 100%;
+      min-width: 0;
+      margin: 0;
+      padding: 10px 14px 9px;
       border: 1px solid var(--line);
-      border-bottom: 0;
-      border-radius: 14px 14px 0 0;
+      border-bottom-color: var(--line);
+      border-radius: 9px 9px 0 0;
       background: #ebe8df;
       color: var(--muted);
+      font-size: 12px;
+      transition: background .16s ease, color .16s ease, border-color .16s ease;
     }
     .record-file-tab::after { display: none; }
+    .record-file-tab:hover {
+      background: #f1efe9;
+      color: var(--ink);
+    }
     .record-file-tab.is-active {
       z-index: 2;
       transform: translateY(1px);
       border-color: var(--line-strong);
+      border-bottom-color: var(--record-paper);
       background: var(--record-paper);
       color: var(--ink);
     }
@@ -67,28 +76,33 @@
         margin-left: auto;
       }
       .record-file-tabs {
-        display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        overflow: visible;
-        padding: 10px 8px 0;
+        gap: 4px;
+        padding: 8px 8px 0;
       }
       .record-file-tab {
-        width: 100%;
-        min-width: 0;
-        margin-right: -1px;
-        padding: 12px 3px 11px;
-        font-size: 11px;
+        padding: 10px 2px 9px;
+        font-size: 10.5px;
       }
       .record-primary-grid {
         display: flex;
         flex-direction: column;
-        gap: 24px;
+        gap: 0;
       }
       .record-primary-grid > :not(.work-preview) {
+        display: contents;
+      }
+      .record-primary-grid > :not(.work-preview) > .record-tab-kicker,
+      .record-primary-grid > :not(.work-preview) > .record-tab-title,
+      .record-primary-grid > :not(.work-preview) > .record-identity-block {
         order: 1;
       }
       .record-primary-grid > .work-preview {
         order: 2;
+        margin-top: 24px;
+      }
+      .record-primary-grid > :not(.work-preview) > .record-result {
+        order: 3;
+        margin-top: 28px;
       }
     }
     @media (max-width: 480px) {
@@ -120,11 +134,6 @@
       .record-meta-item:nth-child(3) {
         border-top: 0;
         border-left: 1px solid var(--line);
-      }
-      .record-file-tab {
-        padding-right: 2px;
-        padding-left: 2px;
-        font-size: 10.5px;
       }
     }
   `;
