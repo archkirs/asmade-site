@@ -192,23 +192,28 @@
     }
   };
 
-  const cvWebpToViewer = {
+  const evidenceToViewer = {
+    'https://s3.eu-central-003.backblazeb2.com/asmade-public-presentation-euc1-7f3a9c/public-demo/mr-pilot-ec-p050-001/materials/m-001/presentation-v1.png': 'evidence-viewer.html?asset=comic-m001',
+    'https://s3.eu-central-003.backblazeb2.com/asmade-public-presentation-euc1-7f3a9c/public-demo/mr-pilot-ec-p050-001/materials/m-002/presentation-v1.png': 'evidence-viewer.html?asset=comic-m002',
+    'https://s3.eu-central-003.backblazeb2.com/asmade-public-presentation-euc1-7f3a9c/public-demo/mr-pilot-ec-p050-001/materials/m-003/presentation-v1.png': 'evidence-viewer.html?asset=comic-m003',
+    'https://s3.eu-central-003.backblazeb2.com/asmade-public-presentation-euc1-7f3a9c/public-demo/mr-pilot-ec-p050-001/materials/m-004/presentation-v1.png': 'evidence-viewer.html?asset=comic-m004',
+    'https://s3.eu-central-003.backblazeb2.com/asmade-public-presentation-euc1-7f3a9c/public-demo/mr-pilot-ec-p050-001/materials/m-005/presentation-v1.png': 'evidence-viewer.html?asset=comic-m005',
     'https://s3.eu-central-003.backblazeb2.com/asmade-public-presentation-euc1-7f3a9c/public-demo/mr-pilot-cv-001/materials/m2-001/redacted-page-1-v1.webp': 'evidence-viewer.html?asset=cv-en',
     'https://s3.eu-central-003.backblazeb2.com/asmade-public-presentation-euc1-7f3a9c/public-demo/mr-pilot-cv-001/materials/m2-001/redacted-page-2-v1.webp': 'evidence-viewer.html?asset=cv-sr'
   };
 
   document.querySelectorAll('a[href]').forEach((link) => {
-    const viewerHref = cvWebpToViewer[link.href];
+    const viewerHref = evidenceToViewer[link.href];
     if (viewerHref) link.href = viewerHref;
   });
 
   const catalogueLinks = {
     'MR-PILOT-EC-P050-001': {
-      'M-001': 'https://s3.eu-central-003.backblazeb2.com/asmade-public-presentation-euc1-7f3a9c/public-demo/mr-pilot-ec-p050-001/materials/m-001/presentation-v1.png',
-      'M-002': 'https://s3.eu-central-003.backblazeb2.com/asmade-public-presentation-euc1-7f3a9c/public-demo/mr-pilot-ec-p050-001/materials/m-002/presentation-v1.png',
-      'M-003': 'https://s3.eu-central-003.backblazeb2.com/asmade-public-presentation-euc1-7f3a9c/public-demo/mr-pilot-ec-p050-001/materials/m-003/presentation-v1.png',
-      'M-004': 'https://s3.eu-central-003.backblazeb2.com/asmade-public-presentation-euc1-7f3a9c/public-demo/mr-pilot-ec-p050-001/materials/m-004/presentation-v1.png',
-      'M-005': 'https://s3.eu-central-003.backblazeb2.com/asmade-public-presentation-euc1-7f3a9c/public-demo/mr-pilot-ec-p050-001/materials/m-005/presentation-v1.png'
+      'M-001': 'evidence-viewer.html?asset=comic-m001',
+      'M-002': 'evidence-viewer.html?asset=comic-m002',
+      'M-003': 'evidence-viewer.html?asset=comic-m003',
+      'M-004': 'evidence-viewer.html?asset=comic-m004',
+      'M-005': 'evidence-viewer.html?asset=comic-m005'
     },
     'MR-PILOT-CV-001': {
       'M2-001': 'https://s3.eu-central-003.backblazeb2.com/asmade-public-presentation-euc1-7f3a9c/public-demo/mr-pilot-cv-001/materials/m2-001/redacted-preview-v1.pdf'
