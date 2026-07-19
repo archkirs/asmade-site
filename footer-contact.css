@@ -332,6 +332,17 @@
     text-align: center;
   }
 
+  /* Shorter mobile labels keep the five equal navigation cells visually balanced. */
+  .nav a[href$="artist.html"],
+  .nav a[href$="records.html"] { font-size: 0; }
+  .nav a[href$="artist.html"]::before,
+  .nav a[href$="records.html"]::before {
+    font-size: 10px;
+    letter-spacing: -.02em;
+  }
+  .nav a[href$="artist.html"]::before { content: "Creative"; }
+  .nav a[href$="records.html"]::before { content: "Records"; }
+
   .nav a::after {
     left: 6px;
     right: 6px;
@@ -365,6 +376,8 @@
   .topbar { width: min(100% - 20px, 1180px); column-gap: 12px; }
   .top-button { padding-inline: 11px; font-size: 10.25px; }
   .nav { font-size: 9.4px; letter-spacing: -.025em; }
+  .nav a[href$="artist.html"]::before,
+  .nav a[href$="records.html"]::before { font-size: 9.4px; }
 
   .record-head .grid-mark { display: grid; }
 }
