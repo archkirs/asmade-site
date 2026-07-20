@@ -18,7 +18,12 @@ function clamp(value, min, max) {
 }
 
 function canonicalRecordUrl(asset) {
-  return asset.recordUrl || RECORD_URLS[asset.recordId] || 'https://useasmade.com/records.html';
+  if (RECORD_URLS[asset.recordId]) return RECORD_URLS[asset.recordId];
+  if (/^https?:\/\//i.test(asset.recordUrl || '')) return asset.recordUrl;
+  if (asset.recordUrl) {
+    return `https://useasmade.com${asset.recordUrl.startsWith('/') ? '' : '/'}${asset.recordUrl}`;
+  }
+  return 'https://useasmade.com/records.html';
 }
 
 function displayRecordUrl(asset) {
