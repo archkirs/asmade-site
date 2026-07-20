@@ -1,6 +1,9 @@
 {
   "name": "asmade-site",
   "private": true,
+  "scripts": {
+    "postinstall": "node scripts/patch-evidence-previews.js"
+  },
   "dependencies": {
     "pdf-lib": "1.17.1",
     "sharp": "0.34.3"
