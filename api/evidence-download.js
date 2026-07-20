@@ -1,4 +1,5 @@
 const sharp = require('sharp');
+const QRCode = require('qrcode');
 const { PDFDocument, StandardFonts, rgb } = require('pdf-lib');
 const assets = require('../evidence-assets.json');
 
@@ -7,8 +8,21 @@ const INK = '#111214';
 const FONT_REGULAR = require.resolve('dejavu-fonts-ttf/ttf/DejaVuSans.ttf');
 const FONT_BOLD = require.resolve('dejavu-fonts-ttf/ttf/DejaVuSans-Bold.ttf');
 
+const RECORD_URLS = {
+  'MR-PILOT-EC-P050-001': 'https://useasmade.com/sample-comic.html',
+  'MR-PILOT-CV-001': 'https://useasmade.com/sample-cv.html',
+};
+
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
+}
+
+function canonicalRecordUrl(asset) {
+  return asset.recordUrl || RECORD_URLS[asset.recordId] || 'https://useasmade.com/records.html';
+}
+
+function displayRecordUrl(asset) {
+  return canonicalRecordUrl(asset).replace(/^https?:\/\//, '').replace(/\/$/, '');
 }
 
 function escapeXml(value) {
@@ -66,6 +80,7 @@ function buildImageShapeOverlay(width, height) {
   const sideW = sideH * 3.45;
   const centreW = centreH * 3.55;
   const usableBottom = height - stripH;
+  const lowerY = Math.max(margin, usableBottom - sideH - margin);
 
   const blocks = [
     blockGeometry({ x: margin, y: margin, width: sideW, height: sideH, opacity: 0.78, strong: false }),
@@ -79,7 +94,7 @@ function buildImageShapeOverlay(width, height) {
     }),
     blockGeometry({
       x: Math.max(margin, width - sideW - margin),
-      y: Math.max(margin, usableBottom - sideH - margin),
+      y: lowerY,
       width: sideW,
       height: sideH,
       opacity: 0.78,
@@ -87,15 +102,17 @@ function buildImageShapeOverlay(width, height) {
     }),
   ];
 
+  const qrBox = { x: margin, y: lowerY, size: sideH };
   const stripY = height - stripH;
   const svg = Buffer.from(`
     <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
       ${blocks.map(imageBlockShape).join('')}
+      <rect x="${qrBox.x}" y="${qrBox.y}" width="${qrBox.size}" height="${qrBox.size}" fill="#fff" fill-opacity="0.92" stroke="${INK}" stroke-opacity="0.24" stroke-width="${Math.max(1, qrBox.size * 0.012)}"/>
       <rect x="0" y="${stripY}" width="${width}" height="${stripH}" fill="#fff" fill-opacity="0.94"/>
       <line x1="0" y1="${stripY}" x2="${width}" y2="${stripY}" stroke="${INK}" stroke-opacity="0.28" stroke-width="${Math.max(1, stripH * 0.018)}"/>
     </svg>`);
 
-  return { svg, blocks, margin, stripH, stripY, width, height };
+  return { svg, blocks, qrBox, margin, stripH, stripY, width, height };
 }
 
 async function renderTextLayer(text, width, height, fontfile, align = 'left') {
@@ -135,8 +152,8 @@ async function buildImageTextComposites(layout, asset) {
   }
 
   const leftText = `AsMade | MADE Record | ${asset.recordId} | v${asset.recordVersion} | ${asset.materialId}`;
-  const rightText = 'useasmade.com';
-  const rightWidth = clamp(layout.width * 0.17, 120, 320);
+  const rightText = displayRecordUrl(asset);
+  const rightWidth = clamp(layout.width * 0.27, 170, 460);
   const stripTextHeight = layout.stripH * 0.42;
   const leftWidth = Math.max(1, layout.width - layout.margin * 3 - rightWidth);
 
@@ -151,6 +168,24 @@ async function buildImageTextComposites(layout, asset) {
   return composites;
 }
 
+async function buildImageQrComposite(layout, asset) {
+  const inset = clamp(layout.qrBox.size * 0.10, 6, 18);
+  const qrSize = Math.max(32, Math.round(layout.qrBox.size - inset * 2));
+  const qr = await QRCode.toBuffer(canonicalRecordUrl(asset), {
+    type: 'png',
+    width: qrSize,
+    margin: 0,
+    errorCorrectionLevel: 'M',
+    color: { dark: INK, light: '#ffffff' },
+  });
+
+  return {
+    input: qr,
+    left: Math.round(layout.qrBox.x + inset),
+    top: Math.round(layout.qrBox.y + inset),
+  };
+}
+
 async function buildImageDerivative(source, asset) {
   const pipeline = sharp(source, { failOn: 'error' });
   const metadata = await pipeline.metadata();
@@ -158,9 +193,11 @@ async function buildImageDerivative(source, asset) {
 
   const layout = buildImageShapeOverlay(metadata.width, metadata.height);
   const textComposites = await buildImageTextComposites(layout, asset);
+  const qrComposite = await buildImageQrComposite(layout, asset);
   const composited = pipeline.composite([
     { input: layout.svg, blend: 'over' },
     ...textComposites,
+    qrComposite,
   ]);
 
   if (asset.format === 'webp') {
@@ -198,12 +235,26 @@ function drawPdfBlock(page, fonts, asset, x, y, width, height, opacity, strong) 
   page.drawText(`${asset.recordId} | ${asset.materialId}`, { x: textX, y: y + height * 0.18, size: height * 0.095, font: fonts.regular, color: ink, opacity });
 }
 
+function fitPdfTextSize(font, text, preferredSize, minSize, maxWidth) {
+  const widthAtPreferred = font.widthOfTextAtSize(text, preferredSize);
+  if (widthAtPreferred <= maxWidth) return preferredSize;
+  return Math.max(minSize, preferredSize * (maxWidth / widthAtPreferred));
+}
+
 async function buildPdfDerivative(source, asset) {
   const pdf = await PDFDocument.load(source, { updateMetadata: false });
   const fonts = {
     regular: await pdf.embedFont(StandardFonts.Helvetica),
     bold: await pdf.embedFont(StandardFonts.HelveticaBold),
   };
+  const qrBuffer = await QRCode.toBuffer(canonicalRecordUrl(asset), {
+    type: 'png',
+    width: 512,
+    margin: 1,
+    errorCorrectionLevel: 'M',
+    color: { dark: INK, light: '#ffffff' },
+  });
+  const qrImage = await pdf.embedPng(qrBuffer);
   const ink = rgb(0.067, 0.071, 0.078);
 
   for (const page of pdf.getPages()) {
@@ -215,18 +266,44 @@ async function buildPdfDerivative(source, asset) {
     const centreH = clamp(short * 0.12, 52, 84);
     const sideW = sideH * 3.45;
     const centreW = centreH * 3.55;
+    const lowerY = stripH + margin;
 
     drawPdfBlock(page, fonts, asset, margin, height - margin - sideH, sideW, sideH, 0.78, false);
     drawPdfBlock(page, fonts, asset, (width - centreW) / 2, (height - stripH - centreH) / 2, centreW, centreH, 1, true);
-    drawPdfBlock(page, fonts, asset, width - margin - sideW, stripH + margin, sideW, sideH, 0.78, false);
+    drawPdfBlock(page, fonts, asset, width - margin - sideW, lowerY, sideW, sideH, 0.78, false);
+
+    page.drawRectangle({
+      x: margin,
+      y: lowerY,
+      width: sideH,
+      height: sideH,
+      color: rgb(1, 1, 1),
+      opacity: 0.92,
+      borderColor: ink,
+      borderOpacity: 0.24,
+      borderWidth: 0.7,
+    });
+    const qrInset = sideH * 0.10;
+    page.drawImage(qrImage, {
+      x: margin + qrInset,
+      y: lowerY + qrInset,
+      width: sideH - qrInset * 2,
+      height: sideH - qrInset * 2,
+    });
 
     page.drawRectangle({ x: 0, y: 0, width, height: stripH, color: rgb(1, 1, 1), opacity: 0.94 });
     page.drawLine({ start: { x: 0, y: stripH }, end: { x: width, y: stripH }, thickness: 0.7, color: ink, opacity: 0.28 });
+
     const left = `AsMade | MADE Record | ${asset.recordId} | v${asset.recordVersion} | ${asset.materialId}`;
-    page.drawText(left, { x: margin, y: stripH * 0.36, size: clamp(stripH * 0.24, 6.5, 10), font: fonts.bold, color: ink });
-    const right = 'useasmade.com';
-    const rightSize = clamp(stripH * 0.24, 6.5, 10);
+    const right = displayRecordUrl(asset);
+    const preferredSize = clamp(stripH * 0.24, 6.5, 10);
+    const rightMaxWidth = width * 0.33;
+    const rightSize = fitPdfTextSize(fonts.bold, right, preferredSize, 5.5, rightMaxWidth);
     const rightWidth = fonts.bold.widthOfTextAtSize(right, rightSize);
+    const leftMaxWidth = Math.max(80, width - margin * 3 - rightWidth);
+    const leftSize = fitPdfTextSize(fonts.bold, left, preferredSize, 5.5, leftMaxWidth);
+
+    page.drawText(left, { x: margin, y: stripH * 0.36, size: leftSize, font: fonts.bold, color: ink });
     page.drawText(right, { x: width - margin - rightWidth, y: stripH * 0.36, size: rightSize, font: fonts.bold, color: ink });
   }
 
