@@ -3,21 +3,21 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>AsMade — Understand how AI-assisted work was made</title>
-  <meta name="description" content="AsMade creates a MADE Record for a specific AI-assisted work, showing the human role, AI use, key decisions, available supporting information, and important unknowns." />
+  <title>AsMade — Understand how the work was made</title>
+  <meta name="description" content="AsMade creates a MADE Record for a specific AI-assisted work, helping people understand the human role, AI use, key decisions, available process information, and what remains unknown." />
   <link rel="canonical" href="https://useasmade.com/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="AsMade" />
-  <meta property="og:title" content="AsMade — Understand how AI-assisted work was made" />
-  <meta property="og:description" content="A MADE Record adds context around a specific AI-assisted work so people can better understand how it was made and form their own judgment." />
+  <meta property="og:title" content="AsMade — Understand how the work was made" />
+  <meta property="og:description" content="A MADE Record adds context around a specific work so people can better understand how it was made and form their own judgment." />
   <meta property="og:url" content="https://useasmade.com/" />
   <meta property="og:image" content="https://useasmade.com/social-preview.svg" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:image:alt" content="AsMade — a clearer record of how AI-assisted work was made." />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="AsMade — Understand how AI-assisted work was made" />
-  <meta name="twitter:description" content="A MADE Record adds context around a specific AI-assisted work so people can better understand how it was made and form their own judgment." />
+  <meta name="twitter:title" content="AsMade — Understand how the work was made" />
+  <meta name="twitter:description" content="A MADE Record adds context around a specific work so people can better understand how it was made and form their own judgment." />
   <meta name="twitter:image" content="https://useasmade.com/social-preview.svg" />
   <meta name="twitter:image:alt" content="AsMade — a clearer record of how AI-assisted work was made." />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
@@ -37,33 +37,120 @@
     </div>
   </header>
   <main id="main-content">
-    <section class="hero-stage" style="display:block; max-width:950px; margin-left:0; margin-right:auto;" aria-labelledby="hero-title">
-      <div class="hero-copy" style="max-width:950px;">
+    <section class="hero-stage" style="grid-template-columns:minmax(0,1fr);max-width:1040px;margin-left:0;margin-right:auto;" aria-labelledby="hero-title">
+      <div class="hero-copy" style="max-width:980px;">
         <p class="section-label">AsMade · See what MADE it.</p>
-        <h1 id="hero-title" style="max-width:950px;">Understand how <span class="made-word">AI-assisted work</span> was made.</h1>
-        <p class="hero-lede" style="max-width:760px;">The finished work shows the result. But it may not show what the person did, where AI was used, or which decisions shaped the outcome.</p>
-        <p class="hero-lede" style="max-width:760px;"><strong>AsMade creates a MADE Record</strong> for one specific work, bringing together the human role, AI use, key decisions, available supporting information, and important unknowns.</p>
-        <a class="primary-button" href="records.html">See MADE Records</a>
-        <p class="cta-helper" style="max-width:760px;">Start with real examples. You can also <a href="https://tally.so/r/NpQkRB?landing=general" target="_blank" rel="noopener">apply for the MVP Pilot</a> when you are ready to test AsMade with your own use case.</p>
-        <p class="micro-note" style="max-width:760px;"><span aria-hidden="true">i</span>AsMade does not tell you what to trust. It gives you more context so you can make your own judgment.</p>
+        <h1 id="hero-title" style="max-width:950px;">Understand <span class="made-word">how the work was made.</span></h1>
+        <p class="hero-lede" style="max-width:780px;">A finished work is the result. But the result alone does not always make clear what the person did, where AI was used, or how key decisions were made.</p>
+        <p class="hero-lede" style="max-width:780px;">Without that context, it is harder to understand what your trust in the work can be based on.</p>
+        <p class="hero-lede" style="max-width:780px;"><strong>AsMade creates a MADE Record</strong> linked to one specific work. It helps show the human and AI roles, important decisions, available process information, and what remains unknown.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;">
+          <a class="primary-button" href="records.html">See MADE Records</a>
+          <a class="primary-button" style="background:transparent;color:var(--ink);border-color:var(--line-strong);" href="https://tally.so/r/NpQkRB?landing=general" target="_blank" rel="noopener">Apply for the MVP Pilot</a>
+        </div>
+        <p class="cta-helper" style="max-width:780px;">Start with real MADE Records. Then decide whether you want to learn more or test AsMade with your own case.</p>
+        <p class="micro-note" style="max-width:780px;"><span aria-hidden="true">i</span>AsMade does not tell you what to trust. It gives you more context so you can make your own judgment.</p>
       </div>
     </section>
 
-    <section id="samples" class="samples-section" aria-labelledby="samples-title"><p class="section-label">See the product</p><h2 id="samples-title">Two different works. One idea: add the missing context.</h2><p>These public examples show how a MADE Record can describe different kinds of AI-assisted work without turning the Record into a certificate or automatic verdict.</p><div class="samples-grid"><a class="sample-link-card" href="sample-comic.html"><span>Creative work example</span><h3>The Count of Monte Cristo — Page 050</h3><p>Human creative direction, AI-assisted image generation, rejected alternatives, final selection, assembly, and visible evidence limits.</p><strong>View MADE Record →</strong></a><a class="sample-link-card" href="sample-cv.html"><span>Professional document example</span><h3>Bilingual Professional CV</h3><p>Human-provided facts, AI-assisted wording and translation, human review, privacy-safe evidence, and missing process history.</p><strong>View MADE Record →</strong></a></div></section>
+    <section class="content-block" aria-labelledby="what-title">
+      <p class="section-label">What AsMade creates</p>
+      <h2 id="what-title">One work. One record of how it was made.</h2>
+      <p>A MADE Record is linked to one specific work. It helps make the most important creation context easier to understand.</p>
+      <div class="trust-grid">
+        <article class="trust-card"><h3>Who was involved?</h3><p>The people or roles connected to creating the work.</p></article>
+        <article class="trust-card"><h3>What did the person do?</h3><p>The actions, choices, edits, and decisions that shaped the result.</p></article>
+        <article class="trust-card"><h3>Where was AI used?</h3><p>Which parts AI supported and how its output was used in the work.</p></article>
+        <article class="trust-card"><h3>What is the account based on?</h3><p>Available drafts, files, versions, AI chats, notes, and other process materials.</p></article>
+        <article class="trust-card"><h3>What remains unknown?</h3><p>Information that is missing, uncertain, or cannot be established from what is available.</p></article>
+      </div>
+    </section>
 
-    <section class="content-block problem-block" aria-labelledby="problem-title"><div><p class="section-label">Why context matters</p><h2 id="problem-title">The result is visible. The human contribution and the role of AI may not be.</h2></div><div class="plain-copy"><p>A finished work tells you what was produced. An AI chat may show only one part of the process.</p><p>A MADE Record connects the important context around one specific work so you do not have to reconstruct the story from scattered files, chats, drafts, and versions.</p></div></section>
+    <section id="samples" class="samples-section" aria-labelledby="samples-title">
+      <p class="section-label">See the product itself</p>
+      <h2 id="samples-title">Two different kinds of work. One principle.</h2>
+      <p>A MADE Record can be linked to different types of work and different ways of using AI.</p>
+      <div class="samples-grid">
+        <a class="sample-link-card" href="sample-comic.html"><span>Creative work example</span><h3>The Count of Monte Cristo — Page 050</h3><p>A creative-work example where the person set the direction, used AI for image generation, rejected weak options, selected final images, and assembled the finished page.</p><strong>View MADE Record →</strong></a>
+        <a class="sample-link-card" href="sample-cv.html"><span>Professional document example</span><h3>Professional CV</h3><p>A document example where the person provided the source information, AI helped with wording and translation, and the result was checked by a person.</p><strong>View MADE Record →</strong></a>
+      </div>
+    </section>
 
-    <section class="content-block" aria-labelledby="record-title"><p class="section-label">What a MADE Record can help answer</p><h2 id="record-title">The questions that matter when the result alone is not enough.</h2><div class="trust-grid"><article class="trust-card"><h3>What did the person do?</h3><p>Actions, choices, edits, checks, and decisions connected to the human role.</p></article><article class="trust-card"><h3>Where did AI help?</h3><p>The tasks AI supported and how AI output affected the final work.</p></article><article class="trust-card"><h3>What is still unknown?</h3><p>Missing, incomplete, uncertain, or unavailable parts of the creation history.</p></article></div></section>
+    <section class="content-block" aria-labelledby="missing-title">
+      <p class="section-label">The missing context</p>
+      <h2 id="missing-title">The result is visible. The human contribution and the role of AI are not always.</h2>
+      <div class="trust-grid">
+        <article class="trust-card"><h3>Finished work</h3><p>Shows what was produced. But it does not always make clear who made the key decisions or what role AI played.</p></article>
+        <article class="trust-card"><h3>AI chat</h3><p>May show part of the interaction with AI. But the work may also include research, drafts, files, other tools, selection, editing, and decisions made outside the chat.</p></article>
+        <article class="trust-card"><h3>MADE Record</h3><p>Brings the important context around one specific work into one place. It does not try to show absolutely everything; it helps people understand the creation story and what that account is based on.</p></article>
+      </div>
+    </section>
 
-    <section id="how" class="content-block" aria-labelledby="how-title"><p class="section-label">How it works</p><h2 id="how-title">From one specific work to a clearer account of how it was made.</h2><div class="steps-grid"><article class="step-card"><span>1</span><h3>Identify the work</h3><p>Each MADE Record is linked to a specific work and version.</p></article><article class="step-card"><span>2</span><h3>Review available information</h3><p>Drafts, files, versions, notes, AI chats, and other relevant materials may be considered when available.</p></article><article class="step-card"><span>3</span><h3>Create the MADE Record</h3><p>AsMade organises the key human and AI roles, decisions, supporting information, and important limits.</p></article><article class="step-card"><span>4</span><h3>Read and decide for yourself</h3><p>Start with the main result, then go deeper into process and evidence only when you need to.</p></article></div></section>
+    <section id="how" class="content-block" aria-labelledby="how-title">
+      <p class="section-label">How it works</p>
+      <h2 id="how-title">From a specific work to clearer context.</h2>
+      <div class="steps-grid">
+        <article class="step-card"><span>1</span><h3>Identify the specific work</h3><p>Each MADE Record is linked to a defined work and version.</p></article>
+        <article class="step-card"><span>2</span><h3>Review available information</h3><p>Drafts, files, versions, notes, AI chats, and other materials connected to the work may be reviewed when available.</p></article>
+        <article class="step-card"><span>3</span><h3>Create the MADE Record</h3><p>AsMade brings together the main human and AI roles, important actions and decisions, available materials, and significant limitations.</p></article>
+        <article class="step-card"><span>4</span><h3>The reader reviews and decides</h3><p>Start with the main picture, then go deeper into process and available materials when needed. The final judgment remains with the person.</p></article>
+      </div>
+    </section>
 
-    <section class="content-block" aria-labelledby="made-title"><p class="section-label">The MADE structure</p><h2 id="made-title">A simple way to organise deeper process information.</h2><div class="comparison-table" role="table" aria-label="MADE structure"><div class="comparison-row comparison-head" role="row"><span role="columnheader">MADE</span><span role="columnheader">What it helps organise</span></div><div class="comparison-row" role="row"><span role="cell">Materials</span><span role="cell">The work itself and available drafts, files, notes, sources, versions, AI chats, and other materials</span></div><div class="comparison-row" role="row"><span role="cell">Actions</span><span role="cell">Researching, creating, using AI, selecting, editing, checking, and revising</span></div><div class="comparison-row" role="row"><span role="cell">Decisions</span><span role="cell">What was chosen, changed, rejected, or approved and how those choices shaped the result</span></div><div class="comparison-row" role="row"><span role="cell">Evolution</span><span role="cell">How the work changed over time, when that history is available</span></div></div><p>MADE is a presentation structure, not a claim that every work has four equally complete parts.</p></section>
+    <section class="content-block" aria-labelledby="questions-title">
+      <p class="section-label">Main questions</p>
+      <h2 id="questions-title">Context that is not in the result itself.</h2>
+      <p>A MADE Record can help answer:</p>
+      <div class="trust-grid">
+        <article class="trust-card"><h3>Who was involved in creating the work?</h3></article>
+        <article class="trust-card"><h3>What did the person do?</h3></article>
+        <article class="trust-card"><h3>Where and why was AI used?</h3></article>
+        <article class="trust-card"><h3>Which decisions shaped the result?</h3></article>
+        <article class="trust-card"><h3>How did the work change over time?</h3></article>
+        <article class="trust-card"><h3>What materials support the account?</h3></article>
+        <article class="trust-card"><h3>What remains unknown or uncertain?</h3></article>
+      </div>
+    </section>
 
-    <section class="content-block" aria-labelledby="basis-title"><p class="section-label">Clear about the basis</p><h2 id="basis-title">Not every statement has the same support.</h2><div class="trust-grid"><article class="trust-card"><h3>What the creator says</h3><p>Information provided by the person about their work and process.</p></article><article class="trust-card"><h3>What available materials support</h3><p>Statements connected to files, drafts, versions, screenshots, AI conversations, or other available information.</p></article><article class="trust-card"><h3>What still needs judgment</h3><p>Questions that remain uncertain, incomplete, disputed, or outside what the Record can decide.</p></article></div></section>
+    <section class="content-block" aria-labelledby="made-title">
+      <p class="section-label">More about the structure</p>
+      <h2 id="made-title">MADE helps organise information about how the work was created.</h2>
+      <p>MADE is four ways of looking at the process.</p>
+      <div class="comparison-table" role="table" aria-label="MADE structure">
+        <div class="comparison-row comparison-head" role="row"><span role="columnheader">MADE</span><span role="columnheader">What it helps organise</span></div>
+        <div class="comparison-row" role="row"><span role="cell">Materials</span><span role="cell">The work itself and available drafts, files, notes, sources, versions, AI chats, and other materials</span></div>
+        <div class="comparison-row" role="row"><span role="cell">Actions</span><span role="cell">Researching, creating, using AI, selecting, editing, checking, and revising</span></div>
+        <div class="comparison-row" role="row"><span role="cell">Decisions</span><span role="cell">What was accepted, changed, rejected, or approved, and how those choices shaped the result</span></div>
+        <div class="comparison-row" role="row"><span role="cell">Evolution</span><span role="cell">How the work changed over time, when that history is available</span></div>
+      </div>
+      <p>MADE is not a rigid template of four mandatory, equally complete parts. It is a way to make process information easier to understand.</p>
+    </section>
 
-    <section id="limits" class="content-block limits-block" aria-labelledby="limits-title"><p class="section-label">Limits</p><h2 id="limits-title">More context. Not a ready-made verdict.</h2><p>A MADE Record helps people understand the origin and creation of a work. It does not guarantee that the content is true, correct, original, or legally owned by a particular person.</p><div class="limits-row"><span>Not an AI detector</span><span>Not legal certification</span><span>Not copyright or ownership proof</span><span>Not proof of fully human authorship</span><span>Does not replace human judgment</span></div></section>
+    <section class="content-block" aria-labelledby="basis-title">
+      <p class="section-label">More context, not a ready-made verdict</p>
+      <h2 id="basis-title">Not all information has the same basis.</h2>
+      <p>A MADE Record can make visible:</p>
+      <div class="trust-grid">
+        <article class="trust-card"><h3>What the creator says</h3><p>Information provided by the creator about the work and process.</p></article>
+        <article class="trust-card"><h3>What connects to available materials</h3><p>Statements linked to drafts, files, versions, AI chats, notes, or other materials.</p></article>
+        <article class="trust-card"><h3>What follows from analysis</h3><p>Conclusions drawn from the available information.</p></article>
+        <article class="trust-card"><h3>What remains unresolved</h3><p>Information that is unsupported, incomplete, uncertain, or unknown.</p></article>
+      </div>
+      <p>AsMade does not hide these differences behind a simple “verified” label.</p>
+    </section>
 
-    <section id="pilot" class="content-block final-cta" aria-labelledby="pilot-title"><div><p class="section-label">MVP pilot</p><h2 id="pilot-title">Help test whether a MADE Record makes the story of a work easier to understand.</h2><p>We are testing AsMade with different kinds of real, non-confidential work. The initial application takes about two minutes, and no project files are uploaded at this stage.</p></div><a class="primary-button" href="https://tally.so/r/NpQkRB?landing=general" target="_blank" rel="noopener">Apply for the MVP Pilot</a></section>
+    <section id="limits" class="content-block limits-block" aria-labelledby="limits-title">
+      <p class="section-label">What AsMade does not do</p>
+      <h2 id="limits-title">More information. The decision remains yours.</h2>
+      <p>A MADE Record is not an AI detector, legal certificate, proof of copyright or ownership, proof that a work was created entirely by a person, or a guarantee that the content of the work is true or correct.</p>
+      <p>AsMade helps people better understand the origin and creation of a work. It does not make the final decision for you.</p>
+      <div class="limits-row"><span>Not an AI detector</span><span>Not legal certification</span><span>Not copyright or ownership proof</span><span>Not proof of fully human authorship</span><span>Not a truth guarantee</span></div>
+    </section>
+
+    <section id="pilot" class="content-block final-cta" aria-labelledby="pilot-title">
+      <div><p class="section-label">MVP Pilot</p><h2 id="pilot-title">Help test whether a MADE Record makes the story of how work was created easier to understand.</h2><p>We are testing AsMade with different kinds of work and different situations. The initial application takes about two minutes. No project files are uploaded at this stage.</p></div>
+      <a class="primary-button" href="https://tally.so/r/NpQkRB?landing=general" target="_blank" rel="noopener">Apply for the MVP Pilot</a>
+    </section>
   </main>
   <footer class="footer">
     <div class="footer-inner">
