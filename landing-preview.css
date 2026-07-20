@@ -1,0 +1,614 @@
+/* Issue #65 Stage A Preview — shared landing-page presentation system.
+   Applies only to Home, Students, Creative Work, and Reviewers through .landing-main. */
+
+.landing-main {
+  width: min(1240px, calc(100% - 64px));
+  margin-inline: auto;
+}
+
+/* ------------------------------
+   Shared section labels
+   ------------------------------ */
+
+.landing-main .section-label {
+  margin: 0 0 18px !important;
+  color: var(--accent) !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  line-height: 1.25 !important;
+  letter-spacing: .1em !important;
+  text-transform: uppercase;
+}
+
+/* Public Record sections use one shared label across all four pages. */
+.landing-main .samples-section .section-label {
+  font-size: 0 !important;
+  line-height: 1 !important;
+  letter-spacing: 0 !important;
+}
+
+.landing-main .samples-section .section-label::after {
+  content: "See public MADE Records";
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+/* ------------------------------
+   CTA colour system
+   ------------------------------ */
+
+body .top-button,
+.landing-main .primary-button {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+}
+
+body .top-button:hover,
+.landing-main .primary-button:hover {
+  border-color: color-mix(in srgb, var(--accent) 84%, black);
+  background: color-mix(in srgb, var(--accent) 84%, black);
+  color: #fff;
+}
+
+.landing-main .secondary-button {
+  border-color: var(--accent);
+  background: transparent;
+  color: var(--accent);
+}
+
+.landing-main .secondary-button:hover {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+/* ------------------------------
+   Hero
+   ------------------------------ */
+
+.landing-main .hero-stage {
+  display: block;
+  max-width: none !important;
+  margin: 72px 0 54px !important;
+}
+
+.landing-main .hero-copy {
+  max-width: none !important;
+  padding: 12px 0 6px;
+}
+
+.landing-main .hero-stage h1 {
+  max-width: 1180px !important;
+  margin-bottom: 26px;
+}
+
+.landing-main .hero-lede {
+  max-width: 1080px !important;
+  margin-bottom: 18px;
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+.landing-main .hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  margin-top: 28px;
+}
+
+.landing-main .hero-actions .primary-button,
+.landing-main .hero-actions .secondary-button {
+  min-width: 168px;
+}
+
+.landing-main .cta-helper,
+.landing-main .micro-note {
+  max-width: 1060px !important;
+}
+
+.landing-main .cta-helper {
+  margin-top: 16px;
+}
+
+/* ------------------------------
+   Shared section rhythm
+   ------------------------------ */
+
+.landing-main .content-block,
+.landing-main .samples-section {
+  width: 100%;
+  padding: 42px 0 !important;
+}
+
+.landing-main .samples-section {
+  border-top: 1px solid var(--line);
+}
+
+.landing-main .content-block h2,
+.landing-main .samples-section h2 {
+  max-width: 1160px;
+}
+
+.landing-main .content-block > p,
+.landing-main .samples-section > p {
+  max-width: 1120px;
+  font-size: 16px;
+  line-height: 1.65;
+}
+
+/* Give explanatory notes room after a dense visual component. */
+.landing-main .comparison-table + p,
+.landing-main .trust-grid + p,
+.landing-main .steps-grid + p,
+.landing-main .limits-row + p {
+  margin-top: 22px;
+}
+
+/* Two-column editorial sections use the available width deliberately. */
+.landing-main .problem-block,
+.landing-main .split-block {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(52px, 6vw, 84px);
+  align-items: start;
+}
+
+.landing-main .problem-block h2,
+.landing-main .split-block h2,
+.landing-main .problem-block .plain-copy p,
+.landing-main .split-block .plain-copy p {
+  max-width: none;
+}
+
+/* ------------------------------
+   Concept grids
+   ------------------------------ */
+
+/* Three peer concepts remain cards: Finished work / AI chat / MADE Record, etc. */
+.landing-main .trust-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 32px;
+}
+
+.landing-main .trust-card {
+  min-width: 0;
+  min-height: 150px;
+  padding: 24px;
+}
+
+.landing-main .trust-card h3 {
+  line-height: 1.28;
+}
+
+/* Four or more conceptual items become an editorial list rather than boxes. */
+.landing-main .trust-grid:has(> :nth-child(4):last-child),
+.landing-main .trust-grid:has(> :nth-child(5):last-child),
+.landing-main .trust-grid:has(> :nth-child(6):last-child),
+.landing-main .trust-grid:has(> :nth-child(7):last-child),
+.landing-main .trust-grid:has(> :nth-child(8):last-child) {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-flow: row;
+  gap: 0 54px;
+  margin-top: 30px;
+  border-top: 1px solid var(--line-strong);
+}
+
+.landing-main .trust-grid:has(> :nth-child(4):last-child) > .trust-card,
+.landing-main .trust-grid:has(> :nth-child(5):last-child) > .trust-card,
+.landing-main .trust-grid:has(> :nth-child(6):last-child) > .trust-card,
+.landing-main .trust-grid:has(> :nth-child(7):last-child) > .trust-card,
+.landing-main .trust-grid:has(> :nth-child(8):last-child) > .trust-card {
+  grid-column: auto !important;
+  min-height: 0;
+  padding: 22px 0 24px;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+}
+
+.landing-main .trust-grid:has(> :nth-child(4):last-child) > .trust-card h3,
+.landing-main .trust-grid:has(> :nth-child(5):last-child) > .trust-card h3,
+.landing-main .trust-grid:has(> :nth-child(6):last-child) > .trust-card h3,
+.landing-main .trust-grid:has(> :nth-child(7):last-child) > .trust-card h3,
+.landing-main .trust-grid:has(> :nth-child(8):last-child) > .trust-card h3 {
+  margin-bottom: 8px;
+  font-size: 18px;
+}
+
+.landing-main .trust-grid:has(> :nth-child(4):last-child) > .trust-card p,
+.landing-main .trust-grid:has(> :nth-child(5):last-child) > .trust-card p,
+.landing-main .trust-grid:has(> :nth-child(6):last-child) > .trust-card p,
+.landing-main .trust-grid:has(> :nth-child(7):last-child) > .trust-card p,
+.landing-main .trust-grid:has(> :nth-child(8):last-child) > .trust-card p {
+  max-width: 540px;
+  font-size: 14px;
+  line-height: 1.58;
+}
+
+/* Odd lists finish with one full-width item, preserving natural left-to-right reading order. */
+.landing-main .trust-grid:has(> :nth-child(5):last-child) > :last-child,
+.landing-main .trust-grid:has(> :nth-child(7):last-child) > :last-child {
+  grid-column: 1 / -1 !important;
+}
+
+/* Remove the final internal rule; the next section already supplies the section divider. */
+.landing-main .trust-grid:has(> :nth-child(4):last-child) > :nth-last-child(-n+2),
+.landing-main .trust-grid:has(> :nth-child(6):last-child) > :nth-last-child(-n+2),
+.landing-main .trust-grid:has(> :nth-child(8):last-child) > :nth-last-child(-n+2),
+.landing-main .trust-grid:has(> :nth-child(5):last-child) > :last-child,
+.landing-main .trust-grid:has(> :nth-child(7):last-child) > :last-child {
+  border-bottom: 0;
+}
+
+/* ------------------------------
+   How it works — sequential flow
+   ------------------------------ */
+
+.landing-main .steps-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
+  margin-top: 36px;
+  border-top: 1px solid var(--line-strong);
+}
+
+.landing-main .steps-grid:has(> :nth-child(5):last-child) {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.landing-main .step-card {
+  grid-column: auto !important;
+  min-width: 0;
+  min-height: 0;
+  padding: 28px 24px 8px 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.landing-main .step-card + .step-card {
+  padding-left: 24px;
+  border-left: 1px solid var(--line);
+}
+
+.landing-main .step-card > span {
+  width: 30px;
+  height: 30px;
+  margin-bottom: 24px;
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.landing-main .step-card h3 {
+  font-size: 17px;
+  line-height: 1.3;
+}
+
+.landing-main .step-card p {
+  max-width: none;
+  font-size: 13px;
+  line-height: 1.58;
+}
+
+/* ------------------------------
+   MADE structure table
+   ------------------------------ */
+
+.landing-main .comparison-table {
+  width: 100%;
+  margin-top: 32px;
+}
+
+.landing-main .comparison-row {
+  grid-template-columns: minmax(220px, .68fr) minmax(0, 1.32fr);
+}
+
+/* ------------------------------
+   Public MADE Record cards
+   ------------------------------ */
+
+.landing-main .samples-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 32px;
+}
+
+.landing-main .sample-link-card {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  min-height: 220px;
+  padding: 26px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  text-decoration: none;
+}
+
+.landing-main .sample-link-card:hover {
+  border-color: var(--line-strong);
+}
+
+.landing-main .sample-link-card span {
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.landing-main .sample-link-card h3 {
+  margin: 0;
+  font-size: 22px;
+  line-height: 1.22;
+}
+
+.landing-main .sample-link-card p {
+  max-width: none;
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.landing-main .sample-link-card strong {
+  margin-top: auto;
+  padding-top: 8px;
+  font-size: 13px;
+}
+
+/* Creative Work keeps the Comic as the primary example through a subtle border accent only. */
+.artist-page .landing-main .samples-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.artist-page .landing-main .sample-link-card:first-child {
+  border-color: color-mix(in srgb, var(--accent) 34%, var(--line));
+}
+
+.artist-page .landing-main .sample-link-card:last-child {
+  min-height: 220px;
+  background: var(--surface);
+}
+
+.artist-page .landing-main .sample-link-card:last-child h3 {
+  font-size: 22px;
+}
+
+/* ------------------------------
+   Limits
+   ------------------------------ */
+
+.landing-main .limits-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 48px;
+  margin-top: 30px;
+  border-top: 1px solid var(--line-strong);
+}
+
+.landing-main .limits-row span {
+  padding: 14px 0;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 560;
+}
+
+.landing-main .limits-row span::before {
+  content: "—";
+  margin-right: 10px;
+  color: var(--accent);
+}
+
+/* Avoid a second closing rule immediately before the next section divider. */
+.landing-main .limits-row span:nth-last-child(-n+2) {
+  border-bottom: 0;
+}
+
+/* ------------------------------
+   Final CTA
+   ------------------------------ */
+
+.landing-main .final-cta {
+  width: min(1120px, 100%);
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 270px);
+  gap: clamp(40px, 6vw, 72px);
+  align-items: center;
+  margin: 0 auto 72px;
+  padding: 38px 42px !important;
+}
+
+.landing-main .final-cta > div {
+  max-width: 760px;
+}
+
+.landing-main .final-cta h2 {
+  max-width: 740px;
+}
+
+.landing-main .final-cta p {
+  max-width: 700px;
+}
+
+.landing-main .final-cta .primary-button {
+  width: 100%;
+  min-height: 52px;
+  padding-inline: 22px;
+  justify-self: stretch;
+}
+
+/* ------------------------------
+   Tablet
+   ------------------------------ */
+
+@media (max-width: 1050px) {
+  .landing-main {
+    width: min(100% - 40px, 1240px);
+  }
+
+  .landing-main .hero-stage {
+    margin-top: 50px !important;
+  }
+
+  .landing-main .problem-block,
+  .landing-main .split-block {
+    gap: 40px;
+  }
+
+  .landing-main .steps-grid,
+  .landing-main .steps-grid:has(> :nth-child(5):last-child) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 34px;
+    border-top: 0;
+  }
+
+  .landing-main .step-card,
+  .landing-main .step-card + .step-card {
+    padding: 24px 0;
+    border-left: 0;
+    border-top: 1px solid var(--line-strong);
+  }
+}
+
+/* ------------------------------
+   Mobile
+   ------------------------------ */
+
+@media (max-width: 760px) {
+  .landing-main {
+    width: min(100% - 28px, 1240px);
+  }
+
+  .landing-main .section-label,
+  .landing-main .samples-section .section-label::after {
+    font-size: 12px !important;
+  }
+
+  .landing-main .hero-stage {
+    margin-top: 34px !important;
+    margin-bottom: 38px !important;
+  }
+
+  .landing-main .hero-stage h1,
+  .landing-main .hero-lede,
+  .landing-main .cta-helper,
+  .landing-main .micro-note,
+  .landing-main .content-block h2,
+  .landing-main .samples-section h2,
+  .landing-main .content-block > p,
+  .landing-main .samples-section > p {
+    max-width: none !important;
+  }
+
+  .landing-main .hero-actions {
+    align-items: stretch;
+  }
+
+  .landing-main .hero-actions .primary-button,
+  .landing-main .hero-actions .secondary-button {
+    flex: 1 1 180px;
+  }
+
+  .landing-main .content-block,
+  .landing-main .samples-section {
+    padding: 36px 0 !important;
+  }
+
+  .landing-main .problem-block,
+  .landing-main .split-block,
+  .landing-main .samples-grid,
+  .artist-page .landing-main .samples-grid,
+  .landing-main .final-cta {
+    grid-template-columns: 1fr;
+  }
+
+  .landing-main .trust-grid:has(> :nth-child(4):last-child),
+  .landing-main .trust-grid:has(> :nth-child(5):last-child),
+  .landing-main .trust-grid:has(> :nth-child(6):last-child),
+  .landing-main .trust-grid:has(> :nth-child(7):last-child),
+  .landing-main .trust-grid:has(> :nth-child(8):last-child) {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .landing-main .trust-grid:has(> :nth-child(5):last-child) > :last-child,
+  .landing-main .trust-grid:has(> :nth-child(7):last-child) > :last-child {
+    grid-column: auto !important;
+  }
+
+  .landing-main .trust-grid:not(:has(> :nth-child(4))) {
+    grid-template-columns: 1fr;
+  }
+
+  .landing-main .trust-card {
+    min-height: 0;
+  }
+
+  .landing-main .steps-grid,
+  .landing-main .steps-grid:has(> :nth-child(5):last-child) {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .landing-main .step-card,
+  .landing-main .step-card + .step-card {
+    display: grid;
+    grid-template-columns: 42px minmax(0, 1fr);
+    column-gap: 16px;
+    padding: 20px 0;
+  }
+
+  .landing-main .step-card > span {
+    grid-row: 1 / span 2;
+    margin: 0;
+  }
+
+  .landing-main .step-card h3,
+  .landing-main .step-card p {
+    grid-column: 2;
+  }
+
+  .landing-main .step-card h3 {
+    margin-bottom: 7px;
+  }
+
+  .landing-main .limits-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .landing-main .limits-row span:nth-last-child(-n+2) {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .landing-main .limits-row span:last-child {
+    border-bottom: 0;
+  }
+
+  .landing-main .sample-link-card {
+    min-height: 0;
+  }
+
+  .landing-main .final-cta {
+    gap: 24px;
+    padding: 30px 22px !important;
+  }
+
+  .landing-main .final-cta .primary-button {
+    width: auto;
+    min-width: 190px;
+    justify-self: start;
+  }
+}

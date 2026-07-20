@@ -403,3 +403,114 @@
 
   .record-head .grid-mark { display: grid; }
 }
+
+/* Issue #65 Preview landing refinements. */
+.student-page #hero-title .hero-title-line {
+  display: block;
+}
+
+@media (min-width: 761px) {
+  .landing-main .problem-block {
+    display: block;
+  }
+
+  .landing-main .problem-block > .plain-copy {
+    max-width: 1120px;
+    margin-top: 24px;
+  }
+
+  .landing-main .problem-block > .plain-copy p {
+    max-width: 1120px;
+  }
+}
+
+@media (max-width: 760px) {
+  .landing-main .comparison-table {
+    overflow: hidden;
+  }
+
+  .landing-main .comparison-head {
+    display: none;
+  }
+
+  .landing-main .comparison-row {
+    display: block;
+    grid-template-columns: none;
+  }
+
+  .landing-main .comparison-row span {
+    display: block;
+    padding: 15px 18px;
+  }
+
+  .landing-main .comparison-row span:first-child {
+    padding-bottom: 6px;
+    color: var(--accent);
+    font-weight: 650;
+  }
+
+  .landing-main .comparison-row span + span {
+    padding-top: 0;
+    border-left: 0;
+  }
+}
+
+/* Preview-only brand/product lockup for the four Stage A landing pages. */
+body:has(.landing-main) .site-header .brand {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+}
+
+body:has(.landing-main) .site-header .brand::after {
+  content: "MADE Record";
+  margin-left: 14px;
+  padding-left: 14px;
+  border-left: 1px solid var(--line-strong);
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -.015em;
+  white-space: nowrap;
+}
+
+@media (max-width: 760px) {
+  body:has(.landing-main) .site-header .brand::after {
+    margin-left: 8px;
+    padding-left: 8px;
+    font-size: 11px;
+  }
+}
+
+/* Footer legal hierarchy: copyright first, operator details below in smaller type. */
+.footer-legal > p:first-child {
+  margin-bottom: 8px;
+  font-size: 0;
+  line-height: 1.4;
+}
+
+.footer-legal > p:first-child::before {
+  content: "© 2026 AsMade.";
+  display: block;
+  margin-bottom: 5px;
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 520;
+}
+
+.footer-legal > p:first-child::after {
+  content: "Operated by IAN KIRS PR BANJA KOVILJAČA, Serbia. Registration no. 68433266 · Tax ID 115550070 · Not registered for VAT.";
+  display: block;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 430;
+  line-height: 1.45;
+  white-space: nowrap;
+}
+
+@media (max-width: 760px) {
+  .footer-legal > p:first-child::after {
+    white-space: normal;
+  }
+}
