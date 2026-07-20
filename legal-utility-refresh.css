@@ -1,0 +1,24 @@
+/* Issue #71: Legal and utility page alignment with the current public-site system. */
+
+/* Keep long-form legal copy readable while allowing structured details to use the full page width. */
+.legal-content .legal-section > h2,
+.legal-content .legal-section > h3,
+.legal-content .legal-section > p,
+.legal-content .legal-section > ul,
+.legal-content .legal-section > ol,
+.legal-content .legal-section > .notice-card {
+  max-width: 760px;
+}
+
+/* Legal / utility footer information architecture: Site, Project, Legal. */
+body.legal-utility-page .footer-links {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 28px;
+}
+
+@media (max-width: 760px) {
+  body.legal-utility-page .footer-links {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
