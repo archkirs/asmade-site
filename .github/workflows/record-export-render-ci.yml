@@ -51,11 +51,17 @@ jobs:
           set -euo pipefail
           PDF='artifacts/AsMade_MR-PILOT-EC-P050-001_v0.4_Summary.pdf'
           test -s "$PDF"
-          if ! command -v pdfinfo >/dev/null 2>&1; then
-            echo "pdfinfo is required for the controlled page-count gate." >&2
-            exit 1
-          fi
-          PAGES="$(pdfinfo "$PDF" | awk '/^Pages:/ {print $2}')"
+          PAGES="$(python - "$PDF" <<'PY'
+          import re
+          import sys
+          from pathlib import Path
+          raw = Path(sys.argv[1]).read_bytes()
+          match = re.search(rb'/Type\s*/Pages\b(?:(?!endobj).){0,4000}?/Count\s+(\d+)', raw, re.S)
+          if not match:
+              raise SystemExit('Could not read Chrome PDF page-tree count')
+          print(match.group(1).decode('ascii'))
+          PY
+          )"
           if [ "$PAGES" != "3" ]; then
             echo "Expected exactly 3 A4 pages; rendered $PAGES." >&2
             exit 1
