@@ -1,328 +1,34 @@
-const sharp = require('sharp');
-const QRCode = require('qrcode');
-const { PDFDocument, StandardFonts, rgb } = require('pdf-lib');
+const crypto = require('node:crypto');
 const assets = require('../evidence-assets.json');
 
-const MAX_SOURCE_BYTES = 40 * 1024 * 1024;
-const INK = '#111214';
-const FONT_REGULAR = require.resolve('dejavu-fonts-ttf/ttf/DejaVuSans.ttf');
-const FONT_BOLD = require.resolve('dejavu-fonts-ttf/ttf/DejaVuSans-Bold.ttf');
+const MAX_SOURCE_BYTES = 10 * 1024 * 1024;
 
-const RECORD_URLS = {
-  'MR-PILOT-EC-P050-001': 'https://useasmade.com/sample-comic.html',
-  'MR-PILOT-CV-001': 'https://useasmade.com/sample-cv.html',
-};
-
-function clamp(value, min, max) {
-  return Math.max(min, Math.min(max, value));
+function normaliseContentType(value) {
+  return String(value || '').split(';', 1)[0].trim().toLowerCase();
 }
 
-function canonicalRecordUrl(asset) {
-  if (RECORD_URLS[asset.recordId]) return RECORD_URLS[asset.recordId];
-  if (/^https?:\/\//i.test(asset.recordUrl || '')) return asset.recordUrl;
-  if (asset.recordUrl) {
-    return `https://useasmade.com${asset.recordUrl.startsWith('/') ? '' : '/'}${asset.recordUrl}`;
-  }
-  return 'https://useasmade.com/records.html';
-}
+async function fetchVerifiedAsset(asset) {
+  const response = await fetch(asset.deliveryUrl, { redirect: 'follow' });
+  if (!response.ok) throw new Error(`delivery_http_${response.status}`);
 
-function displayRecordUrl(asset) {
-  return canonicalRecordUrl(asset).replace(/^https?:\/\//, '').replace(/\/$/, '');
-}
+  const declaredType = normaliseContentType(response.headers.get('content-type'));
+  if (declaredType !== asset.contentType) throw new Error('delivery_content_type_mismatch');
 
-function escapeXml(value) {
-  return String(value).replace(/[&<>"']/g, (char) => ({
-    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;',
-  }[char]));
-}
-
-function gridSvg(x, y, size, opacity = 0.72) {
-  const scale = size / 32;
-  const squares = [];
-  for (const sy of [2, 10, 18, 26]) {
-    for (const sx of [2, 10, 18, 26]) {
-      squares.push(`<rect x="${x + sx * scale}" y="${y + sy * scale}" width="${4 * scale}" height="${4 * scale}"/>`);
-    }
-  }
-  return `<g fill="${INK}" fill-opacity="${opacity}">${squares.join('')}</g>`;
-}
-
-function blockGeometry({ x, y, width, height, opacity, strong }) {
-  const markSize = height * 0.62;
-  const markX = x + height * 0.16;
-  const markY = y + (height - markSize) / 2;
-  const textX = markX + markSize + height * 0.18;
-  const textRight = x + width - height * 0.16;
-  return {
-    x,
-    y,
-    width,
-    height,
-    opacity,
-    strong,
-    markSize,
-    markX,
-    markY,
-    textX,
-    textWidth: Math.max(1, textRight - textX),
-  };
-}
-
-function imageBlockShape(block) {
-  return `
-    <g opacity="${block.opacity}">
-      <rect x="${block.x}" y="${block.y}" width="${block.width}" height="${block.height}" fill="#fff" fill-opacity="0.80" stroke="${INK}" stroke-opacity="0.24" stroke-width="${Math.max(1, block.height * 0.012)}"/>
-      ${gridSvg(block.markX, block.markY, block.markSize)}
-    </g>`;
-}
-
-function buildImageShapeOverlay(width, height) {
-  const short = Math.min(width, height);
-  const margin = clamp(short * 0.03, 18, 90);
-  const stripH = clamp(short * 0.065, 44, 120);
-  const sideH = clamp(short * 0.11, 64, 170);
-  const centreH = clamp(short * 0.135, 78, 210);
-  const sideW = sideH * 3.45;
-  const centreW = centreH * 3.55;
-  const usableBottom = height - stripH;
-  const lowerY = Math.max(margin, usableBottom - sideH - margin);
-
-  const blocks = [
-    blockGeometry({ x: margin, y: margin, width: sideW, height: sideH, opacity: 0.78, strong: false }),
-    blockGeometry({
-      x: (width - centreW) / 2,
-      y: clamp((usableBottom - centreH) / 2, margin, Math.max(margin, usableBottom - centreH - margin)),
-      width: centreW,
-      height: centreH,
-      opacity: 1,
-      strong: true,
-    }),
-    blockGeometry({
-      x: Math.max(margin, width - sideW - margin),
-      y: lowerY,
-      width: sideW,
-      height: sideH,
-      opacity: 0.78,
-      strong: false,
-    }),
-  ];
-
-  const qrBox = { x: margin, y: lowerY, size: sideH };
-  const stripY = height - stripH;
-  const svg = Buffer.from(`
-    <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
-      ${blocks.map(imageBlockShape).join('')}
-      <rect x="${qrBox.x}" y="${qrBox.y}" width="${qrBox.size}" height="${qrBox.size}" fill="#fff" fill-opacity="0.92" stroke="${INK}" stroke-opacity="0.24" stroke-width="${Math.max(1, qrBox.size * 0.012)}"/>
-      <rect x="0" y="${stripY}" width="${width}" height="${stripH}" fill="#fff" fill-opacity="0.94"/>
-      <line x1="0" y1="${stripY}" x2="${width}" y2="${stripY}" stroke="${INK}" stroke-opacity="0.28" stroke-width="${Math.max(1, stripH * 0.018)}"/>
-    </svg>`);
-
-  return { svg, blocks, qrBox, margin, stripH, stripY, width, height };
-}
-
-async function renderTextLayer(text, width, height, fontfile, align = 'left') {
-  const safeWidth = Math.max(1, Math.round(width));
-  const safeHeight = Math.max(1, Math.round(height));
-  return sharp({
-    text: {
-      text: `<span foreground="${INK}">${escapeXml(text)}</span>`,
-      font: 'DejaVu Sans',
-      fontfile,
-      width: safeWidth,
-      height: safeHeight,
-      align,
-      wrap: 'none',
-      rgba: true,
-    },
-  }).png().toBuffer();
-}
-
-async function buildImageTextComposites(layout, asset) {
-  const composites = [];
-
-  for (const block of layout.blocks) {
-    const brandH = block.height * (block.strong ? 0.23 : 0.21);
-    const labelH = block.height * 0.16;
-    const metaH = block.height * 0.13;
-
-    const brand = await renderTextLayer('AsMade', block.textWidth, brandH, FONT_BOLD);
-    const label = await renderTextLayer('MADE Record', block.textWidth, labelH, FONT_BOLD);
-    const meta = await renderTextLayer(`${asset.recordId} | ${asset.materialId}`, block.textWidth, metaH, FONT_REGULAR);
-
-    composites.push(
-      { input: brand, left: Math.round(block.textX), top: Math.round(block.y + block.height * 0.14) },
-      { input: label, left: Math.round(block.textX), top: Math.round(block.y + block.height * 0.42) },
-      { input: meta, left: Math.round(block.textX), top: Math.round(block.y + block.height * 0.66) },
-    );
-  }
-
-  const leftText = `AsMade | MADE Record | ${asset.recordId} | v${asset.recordVersion} | ${asset.materialId}`;
-  const rightText = displayRecordUrl(asset);
-  const rightWidth = clamp(layout.width * 0.27, 170, 460);
-  const stripTextHeight = layout.stripH * 0.42;
-  const leftWidth = Math.max(1, layout.width - layout.margin * 3 - rightWidth);
-
-  const leftLayer = await renderTextLayer(leftText, leftWidth, stripTextHeight, FONT_BOLD);
-  const rightLayer = await renderTextLayer(rightText, rightWidth, stripTextHeight, FONT_BOLD, 'right');
-
-  composites.push(
-    { input: leftLayer, left: Math.round(layout.margin), top: Math.round(layout.stripY + layout.stripH * 0.28) },
-    { input: rightLayer, left: Math.round(layout.width - layout.margin - rightWidth), top: Math.round(layout.stripY + layout.stripH * 0.28) },
-  );
-
-  return composites;
-}
-
-async function buildImageQrComposite(layout, asset) {
-  const inset = clamp(layout.qrBox.size * 0.10, 6, 18);
-  const qrSize = Math.max(32, Math.round(layout.qrBox.size - inset * 2));
-  const qr = await QRCode.toBuffer(canonicalRecordUrl(asset), {
-    type: 'png',
-    width: qrSize,
-    margin: 0,
-    errorCorrectionLevel: 'M',
-    color: { dark: INK, light: '#ffffff' },
-  });
-
-  return {
-    input: qr,
-    left: Math.round(layout.qrBox.x + inset),
-    top: Math.round(layout.qrBox.y + inset),
-  };
-}
-
-async function buildImageDerivative(source, asset) {
-  const pipeline = sharp(source, { failOn: 'error' });
-  const metadata = await pipeline.metadata();
-  if (!metadata.width || !metadata.height) throw new Error('missing_image_dimensions');
-
-  const layout = buildImageShapeOverlay(metadata.width, metadata.height);
-  const textComposites = await buildImageTextComposites(layout, asset);
-  const qrComposite = await buildImageQrComposite(layout, asset);
-  const composited = pipeline.composite([
-    { input: layout.svg, blend: 'over' },
-    ...textComposites,
-    qrComposite,
-  ]);
-
-  if (asset.format === 'webp') {
-    return { body: await composited.webp({ quality: 92, effort: 4 }).toBuffer(), contentType: 'image/webp' };
-  }
-  return { body: await composited.png({ compressionLevel: 9 }).toBuffer(), contentType: 'image/png' };
-}
-
-function drawPdfGrid(page, x, y, size, opacity) {
-  const unit = size / 8;
-  for (const gy of [0.5, 2.5, 4.5, 6.5]) {
-    for (const gx of [0.5, 2.5, 4.5, 6.5]) {
-      page.drawRectangle({
-        x: x + gx * unit,
-        y: y + gy * unit,
-        width: unit,
-        height: unit,
-        color: rgb(0.067, 0.071, 0.078),
-        opacity: 0.72 * opacity,
-      });
-    }
-  }
-}
-
-function drawPdfBlock(page, fonts, asset, x, y, width, height, opacity, strong) {
-  const ink = rgb(0.067, 0.071, 0.078);
-  page.drawRectangle({ x, y, width, height, color: rgb(1, 1, 1), opacity: 0.80 * opacity, borderColor: ink, borderOpacity: 0.24 * opacity, borderWidth: 0.7 });
-  const markSize = height * 0.60;
-  const markX = x + height * 0.14;
-  const markY = y + (height - markSize) / 2;
-  drawPdfGrid(page, markX, markY, markSize, opacity);
-  const textX = markX + markSize + height * 0.16;
-  page.drawText('AsMade', { x: textX, y: y + height * 0.62, size: height * (strong ? 0.20 : 0.18), font: fonts.bold, color: ink, opacity });
-  page.drawText('MADE Record', { x: textX, y: y + height * 0.40, size: height * 0.125, font: fonts.bold, color: ink, opacity });
-  page.drawText(`${asset.recordId} | ${asset.materialId}`, { x: textX, y: y + height * 0.18, size: height * 0.095, font: fonts.regular, color: ink, opacity });
-}
-
-function fitPdfTextSize(font, text, preferredSize, minSize, maxWidth) {
-  const widthAtPreferred = font.widthOfTextAtSize(text, preferredSize);
-  if (widthAtPreferred <= maxWidth) return preferredSize;
-  return Math.max(minSize, preferredSize * (maxWidth / widthAtPreferred));
-}
-
-async function buildPdfDerivative(source, asset) {
-  const pdf = await PDFDocument.load(source, { updateMetadata: false });
-  const fonts = {
-    regular: await pdf.embedFont(StandardFonts.Helvetica),
-    bold: await pdf.embedFont(StandardFonts.HelveticaBold),
-  };
-  const qrBuffer = await QRCode.toBuffer(canonicalRecordUrl(asset), {
-    type: 'png',
-    width: 512,
-    margin: 1,
-    errorCorrectionLevel: 'M',
-    color: { dark: INK, light: '#ffffff' },
-  });
-  const qrImage = await pdf.embedPng(qrBuffer);
-  const ink = rgb(0.067, 0.071, 0.078);
-
-  for (const page of pdf.getPages()) {
-    const { width, height } = page.getSize();
-    const short = Math.min(width, height);
-    const margin = clamp(short * 0.035, 14, 28);
-    const stripH = clamp(short * 0.055, 24, 42);
-    const sideH = clamp(short * 0.095, 42, 68);
-    const centreH = clamp(short * 0.12, 52, 84);
-    const sideW = sideH * 3.45;
-    const centreW = centreH * 3.55;
-    const lowerY = stripH + margin;
-
-    drawPdfBlock(page, fonts, asset, margin, height - margin - sideH, sideW, sideH, 0.78, false);
-    drawPdfBlock(page, fonts, asset, (width - centreW) / 2, (height - stripH - centreH) / 2, centreW, centreH, 1, true);
-    drawPdfBlock(page, fonts, asset, width - margin - sideW, lowerY, sideW, sideH, 0.78, false);
-
-    page.drawRectangle({
-      x: margin,
-      y: lowerY,
-      width: sideH,
-      height: sideH,
-      color: rgb(1, 1, 1),
-      opacity: 0.92,
-      borderColor: ink,
-      borderOpacity: 0.24,
-      borderWidth: 0.7,
-    });
-    const qrInset = sideH * 0.10;
-    page.drawImage(qrImage, {
-      x: margin + qrInset,
-      y: lowerY + qrInset,
-      width: sideH - qrInset * 2,
-      height: sideH - qrInset * 2,
-    });
-
-    page.drawRectangle({ x: 0, y: 0, width, height: stripH, color: rgb(1, 1, 1), opacity: 0.94 });
-    page.drawLine({ start: { x: 0, y: stripH }, end: { x: width, y: stripH }, thickness: 0.7, color: ink, opacity: 0.28 });
-
-    const left = `AsMade | MADE Record | ${asset.recordId} | v${asset.recordVersion} | ${asset.materialId}`;
-    const right = displayRecordUrl(asset);
-    const preferredSize = clamp(stripH * 0.24, 6.5, 10);
-    const rightMaxWidth = width * 0.33;
-    const rightSize = fitPdfTextSize(fonts.bold, right, preferredSize, 5.5, rightMaxWidth);
-    const rightWidth = fonts.bold.widthOfTextAtSize(right, rightSize);
-    const leftMaxWidth = Math.max(80, width - margin * 3 - rightWidth);
-    const leftSize = fitPdfTextSize(fonts.bold, left, preferredSize, 5.5, leftMaxWidth);
-
-    page.drawText(left, { x: margin, y: stripH * 0.36, size: leftSize, font: fonts.bold, color: ink });
-    page.drawText(right, { x: width - margin - rightWidth, y: stripH * 0.36, size: rightSize, font: fonts.bold, color: ink });
-  }
-
-  const body = Buffer.from(await pdf.save({ useObjectStreams: true }));
-  return { body, contentType: 'application/pdf' };
-}
-
-async function fetchSource(asset) {
-  const response = await fetch(asset.sourceUrl, { redirect: 'follow' });
-  if (!response.ok) throw new Error(`source_http_${response.status}`);
   const declaredLength = Number(response.headers.get('content-length') || 0);
-  if (Number.isFinite(declaredLength) && declaredLength > MAX_SOURCE_BYTES) throw new Error('source_too_large');
+  if (Number.isFinite(declaredLength) && declaredLength > MAX_SOURCE_BYTES) {
+    throw new Error('delivery_too_large');
+  }
+  if (declaredLength && declaredLength !== asset.sizeBytes) {
+    throw new Error('delivery_declared_size_mismatch');
+  }
+
   const body = Buffer.from(await response.arrayBuffer());
-  if (body.length > MAX_SOURCE_BYTES) throw new Error('source_too_large');
+  if (body.length > MAX_SOURCE_BYTES) throw new Error('delivery_too_large');
+  if (body.length !== asset.sizeBytes) throw new Error('delivery_size_mismatch');
+
+  const digest = crypto.createHash('sha256').update(body).digest('hex');
+  if (digest !== asset.sha256) throw new Error('delivery_checksum_mismatch');
+
   return body;
 }
 
@@ -338,33 +44,33 @@ module.exports = async function evidenceDownloadHandler(req, res) {
   if (!asset) {
     res.statusCode = 404;
     res.setHeader('Content-Type', 'text/plain; charset=utf-8');
-    return res.end('Evidence derivative not found.');
+    return res.end('Evidence file not found.');
   }
 
   const disposition = req.query.disposition === 'attachment' ? 'attachment' : 'inline';
 
   try {
-    const source = await fetchSource(asset);
-    const derivative = asset.kind === 'pdf'
-      ? await buildPdfDerivative(source, asset)
-      : await buildImageDerivative(source, asset);
+    const body = await fetchVerifiedAsset(asset);
 
     res.statusCode = 200;
-    res.setHeader('Content-Type', derivative.contentType);
+    res.setHeader('Content-Type', asset.contentType);
+    res.setHeader('Content-Length', String(body.length));
     res.setHeader('Content-Disposition', `${disposition}; filename="${asset.filename}"`);
     res.setHeader('Cache-Control', 'public, max-age=300, s-maxage=86400, stale-while-revalidate=604800');
+    res.setHeader('ETag', `"sha256-${asset.sha256}"`);
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
-    return res.end(derivative.body);
+    return res.end(body);
   } catch (error) {
     console.error(JSON.stringify({
-      event: 'evidence_derivative_error',
+      event: 'persistent_evidence_delivery_error',
       asset: assetKey,
+      representationId: asset.representationId,
       code: error && error.message ? error.message : 'unknown_error',
     }));
     res.statusCode = 502;
     res.setHeader('Content-Type', 'text/plain; charset=utf-8');
     res.setHeader('Cache-Control', 'no-store');
-    return res.end('Evidence derivative is temporarily unavailable.');
+    return res.end('Evidence file is temporarily unavailable.');
   }
 };
