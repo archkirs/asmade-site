@@ -1,0 +1,48 @@
+/* Shared Evidence finding-header polish for the public MADE Record demos. */
+
+.evidence-group-head {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  grid-template-areas:
+    "status heading"
+    ". description";
+  column-gap: 14px;
+  row-gap: 8px;
+  align-items: start;
+}
+
+.evidence-group-head > .evidence-status {
+  grid-area: status;
+  margin: 3px 0 0;
+}
+
+.evidence-group-head > h2 {
+  grid-area: heading;
+  margin: 0;
+  line-height: 1.14;
+}
+
+.evidence-group-head > h2 .finding-id {
+  margin: 0 0 5px;
+  line-height: 1.2;
+}
+
+.evidence-group-head > p {
+  grid-area: description;
+  margin: 0;
+}
+
+@media (max-width: 640px) {
+  .evidence-group-head {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "status"
+      "heading"
+      "description";
+    row-gap: 8px;
+  }
+
+  .evidence-group-head > .evidence-status {
+    margin-top: 0;
+  }
+}
