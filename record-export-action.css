@@ -1,0 +1,42 @@
+.record-export-actions {
+  margin: -8px 0 4px;
+}
+
+.record-export-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 0 16px;
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 620;
+  line-height: 1.2;
+  text-decoration: none;
+}
+
+.record-export-button:hover {
+  border-color: color-mix(in srgb, var(--accent) 84%, black);
+  background: color-mix(in srgb, var(--accent) 84%, black);
+  color: #fff;
+}
+
+.record-export-button:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--focus) 70%, white);
+  outline-offset: 3px;
+}
+
+@media (max-width: 760px) {
+  .record-primary-grid > :not(.work-preview) > .record-export-actions {
+    order: 1;
+    width: 100%;
+    margin: 12px 0 0;
+  }
+
+  .record-export-button {
+    width: 100%;
+  }
+}
