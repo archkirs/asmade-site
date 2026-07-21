@@ -38,15 +38,28 @@ jobs:
           echo "CHROME_BIN=$CHROME_PATH" >> "$GITHUB_ENV"
           "$CHROME_PATH" --version
 
+      - name: Capture export generation time
+        shell: bash
+        run: echo "EXPORT_GENERATED_AT=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> "$GITHUB_ENV"
+
       - name: Render official-mode Comic Summary PDF
         run: npm run render:summary-pdf:comic:export
 
-      - name: Record immutable build metadata
+      - name: Validate PDF shape and record immutable build metadata
         shell: bash
         run: |
           set -euo pipefail
           PDF='artifacts/AsMade_MR-PILOT-EC-P050-001_v0.4_Summary.pdf'
           test -s "$PDF"
+          if ! command -v pdfinfo >/dev/null 2>&1; then
+            echo "pdfinfo is required for the controlled page-count gate." >&2
+            exit 1
+          fi
+          PAGES="$(pdfinfo "$PDF" | awk '/^Pages:/ {print $2}')"
+          if [ "$PAGES" != "3" ]; then
+            echo "Expected exactly 3 A4 pages; rendered $PAGES." >&2
+            exit 1
+          fi
           SHA256="$(sha256sum "$PDF" | awk '{print $1}')"
           SIZE="$(stat -c '%s' "$PDF")"
           python - <<PY
@@ -59,7 +72,10 @@ jobs:
               'export_profile': 'summary',
               'export_profile_version': 'summary-pdf-v1',
               'renderer_version': 'asmade-site-record-export-render-ci-v1',
+              'generated_at': '$EXPORT_GENERATED_AT',
+              'source_commit_sha': '$GITHUB_SHA',
               'content_type': 'application/pdf',
+              'page_count': int('$PAGES'),
               'filename': 'AsMade_MR-PILOT-EC-P050-001_v0.4_Summary.pdf',
               'size_bytes': int('$SIZE'),
               'sha256': '$SHA256',
