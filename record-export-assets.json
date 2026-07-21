@@ -19,5 +19,26 @@
     "sha256": "9a0e88ffea768c74f7deadc7aeddabbe48d9846bc93487ae8e5e5b57d5d9deca",
     "etag": "b1ce4e83a1b3c07f186d7b907079256a",
     "filename": "AsMade_MR-PILOT-EC-P050-001_v0.4_Summary.pdf"
+  },
+  "cv-summary-v1": {
+    "kind": "record_export",
+    "format": "pdf",
+    "exportId": "EXP-MR-PILOT-CV-001-V0.3-SUMMARY-001",
+    "exportProfile": "summary",
+    "exportProfileVersion": "summary-pdf-v1",
+    "recordId": "MR-PILOT-CV-001",
+    "recordVersion": "0.3",
+    "recordUrl": "/sample-cv.html",
+    "statusAtBinding": "generated",
+    "previewEnabled": true,
+    "productionEnabled": false,
+    "deliveryUrl": "https://s3.eu-central-003.backblazeb2.com/asmade-public-presentation-euc1-7f3a9c/public-demo/mr-pilot-cv-001/record-exports/exp-mr-pilot-cv-001-v0.3-summary-001/summary-pdf-v1.pdf",
+    "provider": "backblaze_b2",
+    "providerVersionId": "4_zd83928ba95e379619ef10916_f107665f27fefe716_d20260721_m140812_c003_v0312038_t0055_u01784642892691",
+    "contentType": "application/pdf",
+    "sizeBytes": 1407593,
+    "sha256": "c546683410995cfe3605d0eb88fcf74b1b38ae8407baf3f0bb2f6604dfbb2f00",
+    "etag": "8a0b6089801d335098d77f625c502891",
+    "filename": "AsMade_MR-PILOT-CV-001_v0.3_Summary.pdf"
   }
 }
