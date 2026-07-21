@@ -1,18 +1,6 @@
 name: Record Export render CI
 
 on:
-  pull_request:
-    paths:
-      - 'summary-pdf-comic-export.html'
-      - 'summary-pdf.css'
-      - 'summary-pdf-overrides.css'
-      - 'style.css'
-      - 'asmade-wordmark.svg'
-      - 'favicon.svg'
-      - 'summary-pdf-comic-qr.svg'
-      - 'scripts/render-summary-pdf.mjs'
-      - 'package.json'
-      - '.github/workflows/record-export-render-ci.yml'
   workflow_dispatch:
 
 permissions:
