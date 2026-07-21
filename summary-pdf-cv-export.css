@@ -1,0 +1,66 @@
+@media print {
+  .cv-summary-export .pdf-page:first-of-type {
+    padding-bottom: 9mm !important;
+  }
+
+  .cv-summary-export .pdf-page:first-of-type .pdf-kicker {
+    margin-top: 6mm;
+  }
+
+  .cv-summary-export .pdf-page:first-of-type .pdf-title {
+    margin-bottom: 5mm;
+  }
+
+  .cv-summary-export .pdf-page:first-of-type .identity-strip {
+    margin-bottom: 5mm;
+  }
+
+  .cv-summary-export .pdf-page:first-of-type .cv-page-pair {
+    min-height: 79mm;
+  }
+
+  .cv-summary-export .pdf-page:first-of-type .work-card,
+  .cv-summary-export .pdf-page:first-of-type .record-summary-card {
+    padding: 3.5mm;
+  }
+
+  .cv-summary-export .pdf-page:first-of-type .record-summary-card h2 {
+    margin-top: 4.5mm;
+    margin-bottom: 3mm;
+    font-size: 15.5pt;
+  }
+
+  .cv-summary-export .pdf-page:first-of-type .summary-divider {
+    margin: 3.5mm 0;
+  }
+
+  .cv-summary-export .pdf-page:first-of-type .creator-meta {
+    gap: 3mm;
+  }
+
+  .cv-summary-export .pdf-page:first-of-type .asset-note {
+    margin-top: 1.4mm;
+  }
+
+  .cv-summary-export .pdf-page:first-of-type .snapshot-card {
+    padding: 4mm;
+  }
+
+  .cv-summary-export .pdf-page:first-of-type .snapshot-card h2 {
+    margin-bottom: 3mm;
+  }
+
+  .cv-summary-export .pdf-page:first-of-type .snapshot-export-id {
+    margin-top: 3mm;
+  }
+
+  .cv-summary-export .pdf-page:first-of-type .snapshot-link img {
+    width: 20mm;
+    height: 20mm;
+  }
+
+  .cv-summary-export .pdf-page:first-of-type .pdf-footer {
+    margin-top: 2mm;
+    padding-top: 2mm;
+  }
+}
