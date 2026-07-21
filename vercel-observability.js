@@ -24,13 +24,19 @@
 
 (() => {
   const variants = {
+    '/': 'home',
+    '/index.html': 'home',
+    '/student.html': 'student',
+    '/artist.html': 'artist',
+    '/reviewer.html': 'reviewer',
     '/index-v2.html': 'home',
     '/student-v2.html': 'student',
     '/artist-v2.html': 'artist',
     '/reviewer-v2.html': 'reviewer',
   };
 
-  const variant = variants[window.location.pathname];
+  const pathname = window.location.pathname;
+  const variant = variants[pathname];
   if (!variant) return;
 
   const applyVariant = () => {
@@ -74,22 +80,24 @@
       ledes[1].innerHTML = '<strong>A MADE Record</strong> brings that context together for one specific work. It shows what the person did, how AI was used, the actions and decisions that shaped the work, what information is available about the process, and what remains unknown.';
     }
 
-    const variantLinks = {
-      '/': '/index-v2.html',
-      'student.html': '/student-v2.html',
-      '/student.html': '/student-v2.html',
-      'artist.html': '/artist-v2.html',
-      '/artist.html': '/artist-v2.html',
-      'reviewer.html': '/reviewer-v2.html',
-      '/reviewer.html': '/reviewer-v2.html',
-    };
+    if (pathname.endsWith('-v2.html')) {
+      const variantLinks = {
+        '/': '/index-v2.html',
+        'student.html': '/student-v2.html',
+        '/student.html': '/student-v2.html',
+        'artist.html': '/artist-v2.html',
+        '/artist.html': '/artist-v2.html',
+        'reviewer.html': '/reviewer-v2.html',
+        '/reviewer.html': '/reviewer-v2.html',
+      };
 
-    document.querySelectorAll('a[href]').forEach((link) => {
-      const href = link.getAttribute('href');
-      if (Object.prototype.hasOwnProperty.call(variantLinks, href)) {
-        link.setAttribute('href', variantLinks[href]);
-      }
-    });
+      document.querySelectorAll('a[href]').forEach((link) => {
+        const href = link.getAttribute('href');
+        if (Object.prototype.hasOwnProperty.call(variantLinks, href)) {
+          link.setAttribute('href', variantLinks[href]);
+        }
+      });
+    }
 
     document.documentElement.dataset.heroVariant = '2';
   };
