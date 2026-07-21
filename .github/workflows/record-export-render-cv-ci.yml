@@ -5,6 +5,7 @@ on:
     paths:
       - 'summary-pdf-cv-prototype.html'
       - 'summary-pdf-cv.css'
+      - 'summary-pdf-cv-export.css'
       - 'summary-pdf.css'
       - 'summary-pdf-overrides.css'
       - 'style.css'
