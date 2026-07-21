@@ -2,6 +2,7 @@
   "name": "asmade-site",
   "private": true,
   "scripts": {
-    "postinstall": "node scripts/patch-evidence-previews.js"
+    "postinstall": "node scripts/patch-evidence-previews.js",
+    "render:summary-pdf:comic": "node scripts/render-summary-pdf.mjs summary-pdf-comic-prototype.html artifacts/AsMade_MR-PILOT-EC-P050-001_v0.4_Summary_Prototype.pdf"
   }
 }
