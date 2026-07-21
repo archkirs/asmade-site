@@ -1,0 +1,114 @@
+name: Record Export CV render CI
+
+on:
+  pull_request:
+    paths:
+      - 'summary-pdf-cv-prototype.html'
+      - 'summary-pdf-cv.css'
+      - 'summary-pdf-cv-export.css'
+      - 'summary-pdf.css'
+      - 'summary-pdf-overrides.css'
+      - 'style.css'
+      - 'asmade-wordmark.svg'
+      - 'favicon.svg'
+      - 'summary-pdf-cv-qr.svg'
+      - 'scripts/build-cv-summary-export.mjs'
+      - 'scripts/render-summary-pdf.mjs'
+      - '.github/workflows/record-export-render-cv-ci.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  render-cv-summary-export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Resolve Chrome
+        shell: bash
+        run: |
+          set -euo pipefail
+          CHROME_PATH="$(command -v google-chrome || command -v chromium || command -v chromium-browser || true)"
+          if [ -z "$CHROME_PATH" ]; then
+            echo "No Chrome/Chromium executable available on runner." >&2
+            exit 1
+          fi
+          echo "CHROME_BIN=$CHROME_PATH" >> "$GITHUB_ENV"
+          "$CHROME_PATH" --version
+
+      - name: Capture export generation time
+        shell: bash
+        run: echo "EXPORT_GENERATED_AT=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> "$GITHUB_ENV"
+
+      - name: Build official-mode CV export source
+        run: node scripts/build-cv-summary-export.mjs
+
+      - name: Render official-mode CV Summary PDF
+        run: node scripts/render-summary-pdf.mjs summary-pdf-cv-export.html artifacts/AsMade_MR-PILOT-CV-001_v0.3_Summary.pdf
+
+      - name: Record CV render metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          PDF='artifacts/AsMade_MR-PILOT-CV-001_v0.3_Summary.pdf'
+          test -s "$PDF"
+          PAGES="$(python - "$PDF" <<'PY'
+          import re
+          import sys
+          from pathlib import Path
+          raw = Path(sys.argv[1]).read_bytes()
+          match = re.search(rb'/Type\s*/Pages\b(?:(?!endobj).){0,4000}?/Count\s+(\d+)', raw, re.S)
+          if not match:
+              raise SystemExit('Could not read Chrome PDF page-tree count')
+          print(match.group(1).decode('ascii'))
+          PY
+          )"
+          SHA256="$(sha256sum "$PDF" | awk '{print $1}')"
+          SIZE="$(stat -c '%s' "$PDF")"
+          echo "CV_PDF_PAGE_COUNT=$PAGES" >> "$GITHUB_ENV"
+          python - <<PY
+          import json
+          from pathlib import Path
+          payload = {
+              'record_id': 'MR-PILOT-CV-001',
+              'record_version': '0.3',
+              'export_id': 'EXP-MR-PILOT-CV-001-V0.3-SUMMARY-001',
+              'export_profile': 'summary',
+              'export_profile_version': 'summary-pdf-v1',
+              'renderer_version': 'asmade-site-record-export-render-ci-v1',
+              'generated_at': '$EXPORT_GENERATED_AT',
+              'source_commit_sha': '$GITHUB_SHA',
+              'content_type': 'application/pdf',
+              'page_count': int('$PAGES'),
+              'filename': 'AsMade_MR-PILOT-CV-001_v0.3_Summary.pdf',
+              'size_bytes': int('$SIZE'),
+              'sha256': '$SHA256',
+              'shape_ok': int('$PAGES') == 3,
+          }
+          Path('artifacts/cv-summary-export-metadata.json').write_text(
+              json.dumps(payload, indent=2) + '\n', encoding='utf-8'
+          )
+          print(json.dumps(payload, indent=2))
+          PY
+
+      - name: Upload controlled render artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cv-summary-export-candidate
+          path: |
+            artifacts/AsMade_MR-PILOT-CV-001_v0.3_Summary.pdf
+            artifacts/cv-summary-export-metadata.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Enforce three-page A4 shape
+        shell: bash
+        run: |
+          if [ "$CV_PDF_PAGE_COUNT" != "3" ]; then
+            echo "Expected exactly 3 A4 pages; rendered $CV_PDF_PAGE_COUNT." >&2
+            exit 1
+          fi

@@ -1,0 +1,124 @@
+.cv-summary-prototype .cv-hero-grid {
+  grid-template-columns: 1.18fr .96fr;
+}
+
+.cv-work-card .work-card-head span {
+  text-align: right;
+}
+
+.cv-page-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3mm;
+  min-height: 82mm;
+}
+
+.cv-page-preview {
+  overflow: hidden;
+  border: 1px solid var(--pdf-line);
+  border-radius: 2mm;
+  background: var(--pdf-soft);
+}
+
+.cv-page-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.status-pill.declared {
+  max-width: 43mm;
+  min-height: 7mm;
+  padding: 1.2mm 3.1mm;
+  color: #865f28;
+  background: #f5ede0;
+  white-space: normal;
+  text-align: center;
+  line-height: 1.15;
+}
+
+.cv-process-evidence-grid {
+  grid-template-columns: .92fr 1.08fr;
+  gap: 8mm;
+}
+
+.cv-evidence-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3mm;
+}
+
+.cv-evidence-card {
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--pdf-line);
+  border-radius: 3mm;
+  background: #fff;
+}
+
+.cv-evidence-card .preview-head {
+  padding: 2.5mm 3mm 0;
+  color: var(--pdf-muted);
+  font-size: 7.4pt;
+  font-weight: 600;
+}
+
+.cv-evidence-image {
+  height: 58mm;
+  margin: 2.5mm 3mm 0;
+  overflow: hidden;
+  border-radius: 2mm;
+  background: var(--pdf-soft);
+}
+
+.cv-evidence-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.cv-evidence-card figcaption {
+  padding: 2.5mm 3mm 3mm;
+  font-size: 7.5pt;
+  font-weight: 600;
+}
+
+.cv-representation-note {
+  margin: 3mm 0 0;
+  color: var(--pdf-muted);
+  font-size: 7.2pt;
+  line-height: 1.4;
+}
+
+.cv-evidence-inclusion-box {
+  margin-top: 4mm;
+}
+
+.cv-evidence-inclusion-box h2 {
+  font-size: 9.4pt;
+}
+
+.cv-evidence-inclusion-box .box-intro {
+  margin-bottom: 2.5mm;
+}
+
+.cv-evidence-inclusion-box dl > div {
+  padding-block: 2mm;
+}
+
+.cv-evidence-inclusion-box dt,
+.cv-evidence-inclusion-box dd {
+  font-size: 6.9pt;
+}
+
+.cv-limits-box {
+  margin-top: auto;
+}
+
+@media print {
+  .cv-summary-prototype .pdf-page {
+    background: #fff;
+  }
+}
