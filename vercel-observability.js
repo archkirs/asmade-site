@@ -23,6 +23,22 @@
 })();
 
 (() => {
+  const style = document.createElement('style');
+  style.textContent = `
+    .landing-main .hero-stage h1 .hero-title-line {
+      display: block;
+    }
+
+    .landing-main .hero-lede,
+    .landing-main .cta-helper,
+    .landing-main .micro-note {
+      max-width: 860px !important;
+    }
+  `;
+  document.head.appendChild(style);
+})();
+
+(() => {
   const variants = {
     '/index-v2.html': 'home',
     '/student-v2.html': 'student',
