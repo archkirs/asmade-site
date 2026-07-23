@@ -1,0 +1,30 @@
+name: Issue 100 source diagnostics
+
+on:
+  push:
+    branches:
+      - audit/issue-100-live-production
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-debug:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Fetch and inspect production source
+        run: node scripts/issue-100-source-debug.mjs
+      - name: Upload source diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: issue-100-source-debug
+          path: audit-source-output/
+          if-no-files-found: error
+          retention-days: 7
