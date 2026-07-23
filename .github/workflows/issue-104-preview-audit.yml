@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - audit/issue-104-preview-verification
+  pull_request:
+    branches:
+      - main
 
 permissions:
   contents: read
