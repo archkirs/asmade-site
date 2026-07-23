@@ -34,9 +34,9 @@ const pages = [
   { file: 'sample-cv.html', active: 'records', footer: 'records', landing: 'general' },
   { file: 'about.html', active: '', footer: 'about', landing: 'general' },
   { file: 'contact/index.html', active: '', footer: 'contact', landing: 'general' },
-  { file: 'privacy.html', active: '', footer: 'privacy', landing: 'general' },
-  { file: 'terms.html', active: '', footer: 'terms', landing: 'general' },
-  { file: 'pilot-notice.html', active: '', footer: 'pilot', landing: 'general' },
+  { file: 'privacy.html', active: '', footer: 'privacy', landing: 'general', legal: true },
+  { file: 'terms.html', active: '', footer: 'terms', landing: 'general', legal: true },
+  { file: 'pilot-notice.html', active: '', footer: 'pilot', landing: 'general', legal: true },
 ];
 
 const headerPattern = /<header[^>]*class="[^"]*(?:v4-header|site-header)[^"]*"[^>]*>[\s\S]*?<\/header>/i;
@@ -78,15 +78,30 @@ function valuesFor(page) {
   };
 }
 
-function injectStyles(html) {
-  const links = [
-    '<link rel="stylesheet" href="/site-shell.css" />',
-    '<link rel="stylesheet" href="/v4-content-safety.css" />',
-  ];
-  const missing = links.filter((link) => !html.includes(link));
-  if (!missing.length) return html;
+function enhanceMotionMarkup(html, page) {
+  if (!page.legal) return html;
+  return html
+    .replace(/class="legal-hero"/g, 'class="legal-hero fade"')
+    .replace(/class="legal-section"/g, 'class="legal-section fade"');
+}
+
+function injectHeadAssets(html) {
+  const assets = [];
+  if (!html.includes('/site-shell.css')) {
+    assets.push('<link rel="stylesheet" href="/site-shell.css" />');
+  }
+  if (!html.includes('/v4-content-safety.css')) {
+    assets.push('<link rel="stylesheet" href="/v4-content-safety.css" />');
+  }
+  if (!html.includes('v4-motion-enabled')) {
+    assets.push('<script>document.documentElement.classList.add("v4-motion-enabled")</script>');
+  }
+  if (!html.includes('/v4-motion.js')) {
+    assets.push('<script src="/v4-motion.js" defer></script>');
+  }
+  if (!assets.length) return html;
   if (!html.includes('</head>')) throw new Error('Missing </head>');
-  return html.replace('</head>', `  ${missing.join('\n  ')}\n</head>`);
+  return html.replace('</head>', `  ${assets.join('\n  ')}\n</head>`);
 }
 
 for (const page of pages) {
@@ -102,7 +117,8 @@ for (const page of pages) {
   const values = valuesFor(page);
   html = html.replace(headerPattern, render(headerTemplate, values));
   html = html.replace(footerPattern, render(footerTemplate, values));
-  html = injectStyles(html);
+  html = enhanceMotionMarkup(html, page);
+  html = injectHeadAssets(html);
   fs.writeFileSync(absolute, html, 'utf8');
 }
 
