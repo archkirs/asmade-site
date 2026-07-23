@@ -31,6 +31,11 @@
   outline-offset: 3px;
 }
 
+/* V4 global header owns the product-page branding; avoid the older Comic-only lockup. */
+body.record-demo-page.comic-stage-b-record .site-header .brand::after {
+  display: none !important;
+}
+
 @media (max-width: 760px) {
   .record-primary-grid > :not(.work-preview) > .record-export-actions {
     order: 1;
