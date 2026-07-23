@@ -1,4 +1,4 @@
-name: Issue 104 full Preview audit
+name: Issue 104 canonical build parity
 
 on:
   push:
@@ -10,46 +10,93 @@ on:
 
 permissions:
   contents: read
-  pull-requests: write
-  issues: write
 
 jobs:
-  audit:
+  parity:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 8
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout PR 28 source for Preview build
+        uses: actions/checkout@v4
+        with:
+          ref: bugfix/issue-104-canonical-v4-source-parity
+          path: preview
+      - name: Checkout PR 28 source for Production build
+        uses: actions/checkout@v4
+        with:
+          ref: bugfix/issue-104-canonical-v4-source-parity
+          path: production
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: Install Playwright Chromium
+      - name: Build Preview-mode output
+        working-directory: preview
+        run: VERCEL_ENV=preview npm run postinstall
+      - name: Build Production-mode output
+        working-directory: production
+        run: VERCEL_ENV=production npm run postinstall
+      - name: Require canonical audience pages to be byte-identical
         run: |
-          npm install --no-save playwright@1.55.0
-          npx playwright install --with-deps chromium
-      - name: Audit PR 28 Preview
-        id: audit
-        env:
-          AUDIT_BASE: https://asmade-site-git-bugfix-issue-104-canon-8c293a-archkirs-projects.vercel.app
+          for file in index.html student.html artist.html reviewer.html; do
+            cmp "preview/$file" "production/$file"
+            echo "$file: Preview == Production"
+          done
+      - name: Verify canonical V4 SEO, routing and tracking in both builds
         run: |
-          set +e
-          node scripts/issue-104-preview-audit.mjs > issue-104-audit.log 2>&1
-          status=$?
-          cat issue-104-audit.log
-          echo "status=$status" >> "$GITHUB_OUTPUT"
-          exit 0
-      - name: Post compact audit result
-        if: always() && github.event_name == 'pull_request'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          {
-            echo '## Issue #104 Preview audit result'
-            echo
-            echo '```text'
-            cat issue-104-audit.log
-            echo '```'
-          } > issue-104-comment.md
-          gh pr comment 29 --body-file issue-104-comment.md
-      - name: Fail job if audit failed
-        if: steps.audit.outputs.status != '0'
-        run: exit 1
+          node <<'NODE'
+          const fs = require('fs');
+          const roots = ['preview', 'production'];
+          const pages = [
+            ['index.html','https://useasmade.com/','general','A content passport for one AI-assisted work'],
+            ['student.html','https://useasmade.com/student.html','student','AsMade for Students'],
+            ['artist.html','https://useasmade.com/artist.html','artist','AsMade for Creative Work'],
+            ['reviewer.html','https://useasmade.com/reviewer.html','reviewer','AsMade for Reviewers'],
+          ];
+          for (const root of roots) {
+            for (const [file, canonical, landing, marker] of pages) {
+              const html = fs.readFileSync(`${root}/${file}`, 'utf8');
+              const required = [
+                ['V4 marker', html.includes(marker)],
+                ['dark V4 zone', html.includes('class="dark-zone"')],
+                ['title', /<title>[^<]+<\/title>/i.test(html)],
+                ['description', /<meta[^>]+name=["']description["'][^>]+content=["'][^"']+["']/i.test(html)],
+                ['canonical', html.includes(`rel="canonical" href="${canonical}"`)],
+                ['OG title', html.includes('property="og:title"')],
+                ['OG description', html.includes('property="og:description"')],
+                ['OG URL', html.includes('property="og:url"')],
+                ['OG image', html.includes('property="og:image"')],
+                ['Twitter card', html.includes('name="twitter:card"')],
+                ['Twitter title', html.includes('name="twitter:title"')],
+                ['Twitter description', html.includes('name="twitter:description"')],
+                ['Twitter image', html.includes('name="twitter:image"')],
+                ['indexable', !/meta\s+name=["']robots["'][^>]*noindex/i.test(html)],
+                ['no Lab path', !html.includes('/lab/v4/')],
+                ['no Lab controls', !/design-lab-panel|lab-controls\.js/.test(html)],
+                ['shared header', (html.match(/class="asmade-header"/g) || []).length === 1],
+                ['shared footer', (html.match(/class="asmade-footer"/g) || []).length === 1],
+                ['five nav cells', (html.match(/class="asmade-nav-link/g) || []).length === 5],
+                ['Tally landing', new RegExp(`https://tally\\.so/r/NpQkRB\\?landing=${landing}`).test(html)],
+              ];
+              for (const [label, ok] of required) {
+                if (!ok) throw new Error(`${root}/${file}: ${label} failed`);
+              }
+            }
+            const home = fs.readFileSync(`${root}/index.html`, 'utf8');
+            if (!/application\/ld\+json/i.test(home) || !/"@type"\s*:\s*"WebSite"/.test(home)) {
+              throw new Error(`${root}/index.html: WebSite JSON-LD missing`);
+            }
+          }
+          const vercel = JSON.parse(fs.readFileSync('preview/vercel.json', 'utf8'));
+          const rewrites = vercel.rewrites || [];
+          for (const [source, destination] of [
+            ['/v4-audience-base.css','/lab/v4/v4.css'],
+            ['/v4-audience-pages.css','/lab/v4/audience.css'],
+            ['/v4-audience-polish.css','/lab/v4/polish.css'],
+            ['/audience.js','/lab/v4/audience.js'],
+          ]) {
+            if (!rewrites.some(r => r.source === source && r.destination === destination)) {
+              throw new Error(`Missing rewrite ${source} -> ${destination}`);
+            }
+          }
+          console.log('Canonical V4 build parity and metadata checks passed.');
+          NODE
