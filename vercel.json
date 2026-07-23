@@ -8,6 +8,7 @@
   "rewrites": [
     { "source": "/v4-audience-base.css", "destination": "/lab/v4/v4.css" },
     { "source": "/v4-audience-pages.css", "destination": "/lab/v4/audience.css" },
-    { "source": "/v4-audience-polish.css", "destination": "/lab/v4/polish.css" }
+    { "source": "/v4-audience-polish.css", "destination": "/lab/v4/polish.css" },
+    { "source": "/audience.js", "destination": "/lab/v4/audience.js" }
   ]
 }
