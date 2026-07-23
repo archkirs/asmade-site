@@ -1,0 +1,23 @@
+/* V4 content visibility guard.
+   Meaningful content must never depend on scroll-linked opacity or JavaScript. */
+.fade,
+.fade.on {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+body.record-demo-page .process-step,
+body.record-demo-page .evidence-layout,
+body.record-demo-page .full-catalogue,
+body.record-demo-page .history-item,
+body.record-demo-page .record-limitation {
+  opacity: 1 !important;
+  transform: none !important;
+  animation: none !important;
+  animation-timeline: auto !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fade,
+  .fade.on { transition: none !important; }
+}
