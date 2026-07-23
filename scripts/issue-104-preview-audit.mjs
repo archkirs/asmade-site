@@ -21,12 +21,13 @@ const pages = [
 const audienceRoutes = new Set(['/','/student.html','/artist.html','/reviewer.html']);
 const failures=[]; let checks=0;
 function check(ok,scope,detail){checks++; if(!ok) failures.push(`${scope}: ${detail}`);}
+function classTokenCount(html, token){return [...html.matchAll(/class=["']([^"']*)["']/gi)].filter(m=>m[1].split(/\s+/).includes(token)).length;}
 function meta(html, attr, key){
   const safe=key.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
   return html.match(new RegExp(`<meta[^>]+${attr}=["']${safe}["'][^>]+content=["']([^"']*)["'][^>]*>`,'i'))?.[1]?.trim()||'';
 }
 function canonical(html){return html.match(/<link[^>]+rel=["']canonical["'][^>]+href=["']([^"']+)["']/i)?.[1]?.trim()||'';}
-async function get(url, opts={}){return fetch(url,{redirect:'manual',headers:{'user-agent':'AsMade-Issue-104-Preview-Audit/1.0',...(opts.headers||{})},...opts});}
+async function get(url, opts={}){return fetch(url,{redirect:'manual',headers:{'user-agent':'AsMade-Issue-104-Production-Audit/1.0',...(opts.headers||{})},...opts});}
 
 const discovered=new Set();
 for(const [name,route,landing] of pages){
@@ -41,9 +42,9 @@ for(const [name,route,landing] of pages){
   if(route==='/') check(/application\/ld\+json/i.test(html)&&/"@type"\s*:\s*"WebSite"/i.test(html),'SEO Home','WebSite JSON-LD');
   check(!/\/lab\/v4\//i.test(html),`Leakage ${name}`,'no /lab/v4/ in canonical HTML');
   check(!/design-lab-panel|data-design-lab|lab-controls\.js/i.test(html),`Leakage ${name}`,'no Design Lab controls');
-  check((html.match(/class=["'][^"']*asmade-nav-link\b[^"']*["']/gi)||[]).length===5,`Shell ${name}`,'five primary nav cells');
-  check((html.match(/class=["'][^"']*asmade-header\b[^"']*["']/gi)||[]).length===1,`Shell ${name}`,'one shared header');
-  check((html.match(/class=["'][^"']*asmade-footer\b[^"']*["']/gi)||[]).length===1,`Shell ${name}`,'one shared footer');
+  check(classTokenCount(html,'asmade-nav-link')===5,`Shell ${name}`,'five primary nav cells');
+  check(classTokenCount(html,'asmade-header')===1,`Shell ${name}`,'one shared header');
+  check(classTokenCount(html,'asmade-footer')===1,`Shell ${name}`,'one shared footer');
   const tally=[...html.matchAll(/https:\/\/tally\.so\/r\/NpQkRB\?landing=([a-z]+)/g)].map(m=>m[1]);
   check(tally.length>0,`Tally ${name}`,'CTA present');
   check(tally.every(v=>v===landing),`Tally ${name}`,`expected ${landing}, got ${[...new Set(tally)].join(',')}`);
@@ -92,5 +93,5 @@ for(const [key,width,height] of [['desktop',1440,900],['mobile390',390,844],['mo
 }
 const reduced=await browser.newContext({viewport:{width:390,height:844},reducedMotion:'reduce'}); const rp=await reduced.newPage(); await rp.goto(BASE+'/',{waitUntil:'domcontentloaded'}); await rp.waitForTimeout(100); const hiddenReduced=await rp.evaluate(()=>[...document.querySelectorAll('.fade')].filter(el=>Number(getComputedStyle(el).opacity)===0).length); check(hiddenReduced===0,'Reduced motion Home','meaningful content visible'); await reduced.close(); await browser.close();
 
-console.log(`Issue #104 Preview audit: ${checks} checks, ${failures.length} failures`);
+console.log(`Issue #104 production audit: ${checks} checks, ${failures.length} failures`);
 if(failures.length){console.error(failures.map(x=>'- '+x).join('\n')); process.exit(1);}
