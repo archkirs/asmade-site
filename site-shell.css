@@ -53,14 +53,14 @@
   justify-self: center;
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 18px;
 }
 
 .asmade-nav-link {
   position: relative;
   padding: 9px 0;
   color: rgba(255,255,255,.68) !important;
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.2;
   text-decoration: none !important;
   white-space: nowrap;
@@ -93,7 +93,7 @@
   border-radius: 999px;
   background: var(--asmade-shell-accent);
   color: var(--asmade-shell-night) !important;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 740;
   line-height: 1.2;
   text-decoration: none !important;
@@ -205,7 +205,7 @@
 @media (max-width: 1050px) {
   .asmade-header-inner { width: min(100% - 36px,1320px); }
   .asmade-primary-nav { gap: 13px; }
-  .asmade-nav-link { font-size: 9px; }
+  .asmade-nav-link { font-size: 11px; }
   .asmade-header-cta { padding: 0 12px; }
   .asmade-footer-main { grid-template-columns: 1fr; gap: 44px; }
   .asmade-footer-links { max-width: 720px; }
