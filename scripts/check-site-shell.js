@@ -37,6 +37,8 @@ for (const file of pages) {
     [html.includes('<p class="asmade-footer-heading">Legal</p>'), 'Legal footer group'],
     [html.includes('/site-shell.css'), 'shared shell stylesheet'],
     [html.includes('/v4-content-safety.css'), 'content visibility guard'],
+    [html.includes('v4-motion-enabled'), 'progressive motion init'],
+    [html.includes('/v4-motion.js'), 'shared motion observer'],
     [!html.includes('class="site-header"'), 'no legacy site-header'],
     [!html.includes('class="v4-header"'), 'no legacy V4 header'],
     [!html.includes('class="site-footer"'), 'no legacy site-footer'],
