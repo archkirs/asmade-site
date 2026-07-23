@@ -1,0 +1,61 @@
+name: Issue 103 preview verification
+
+on:
+  push:
+    branches:
+      - bugfix/issue-103-track-v4-audience-assets
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Validate production-mode build
+        run: VERCEL_ENV=production npm run postinstall
+
+      - name: Check canonical production output
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const pages = ['index.html', 'student.html', 'artist.html', 'reviewer.html'];
+          const assets = ['/v4-audience-base.css', '/v4-audience-pages.css', '/v4-audience-polish.css'];
+          for (const file of pages) {
+            const html = fs.readFileSync(file, 'utf8');
+            for (const asset of assets) {
+              if (!html.includes(`href="${asset}"`)) throw new Error(`${file}: missing ${asset}`);
+            }
+            if (html.includes('/lab/v4/')) throw new Error(`${file}: /lab/v4/ leakage remains`);
+            if (/meta\s+name=["']robots["'][^>]*noindex/i.test(html)) throw new Error(`${file}: noindex remains`);
+          }
+          console.log('Canonical production HTML checks passed.');
+          NODE
+
+      - name: Check canonical CSS rewrites on Vercel Preview
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const base = 'https://asmade-site-git-bugfix-issue-103-track-83bf82-archkirs-projects.vercel.app';
+          const assets = [
+            ['/v4-audience-base.css', 'lab/v4/v4.css'],
+            ['/v4-audience-pages.css', 'lab/v4/audience.css'],
+            ['/v4-audience-polish.css', 'lab/v4/polish.css'],
+          ];
+          (async () => {
+            for (const [publicPath, sourcePath] of assets) {
+              const response = await fetch(base + publicPath, { headers: { 'user-agent': 'AsMade-Issue-103-Preview-Check/1.0' } });
+              if (response.status !== 200) throw new Error(`${publicPath}: expected 200, got ${response.status}`);
+              const remote = await response.text();
+              const local = fs.readFileSync(sourcePath, 'utf8');
+              if (remote !== local) throw new Error(`${publicPath}: served CSS differs from ${sourcePath}`);
+              console.log(`${publicPath}: 200 and byte-equivalent to ${sourcePath}`);
+            }
+          })().catch((error) => { console.error(error); process.exit(1); });
+          NODE
