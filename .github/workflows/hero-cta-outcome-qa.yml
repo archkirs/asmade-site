@@ -1,0 +1,142 @@
+name: Hero CTA outcome QA
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - index.html
+      - student.html
+      - artist.html
+      - reviewer.html
+      - lab/v4/**
+      - .github/workflows/hero-cta-outcome-qa.yml
+
+permissions:
+  contents: read
+
+jobs:
+  hero-cta-outcomes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install Playwright Chromium
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Prepare canonical V4 assets for local serving
+        run: |
+          cp lab/v4/v4.css v4-audience-base.css
+          cp lab/v4/audience.css v4-audience-pages.css
+          cp lab/v4/polish.css v4-audience-polish.css
+          cp lab/v4/audience.js audience.js
+      - name: Start local static site
+        run: |
+          python3 -m http.server 4173 > /tmp/asmade-cta-qa-server.log 2>&1 &
+          echo $! > /tmp/asmade-cta-qa-server.pid
+      - name: Verify hero CTA outcomes at desktop and mobile widths
+        run: |
+          node --input-type=module <<'NODE'
+          import { chromium } from 'playwright';
+
+          const BASE = 'http://127.0.0.1:4173';
+          const cases = [
+            {
+              name: 'Home',
+              route: '/',
+              cta: 'See how the Record works',
+              hash: '#record-map',
+              target: '#record-map',
+              heading: 'One Record. Four questions.'
+            },
+            {
+              name: 'Students',
+              route: '/student.html',
+              cta: 'See how roles differ',
+              hash: '#assignment-lens',
+              target: '#assignment-lens',
+              heading: 'The same “used AI” label can describe very different assignments.'
+            },
+            {
+              name: 'Creative Work',
+              route: '/artist.html',
+              cta: 'See what the creator did',
+              hash: '#creative-role',
+              target: '#creative-role',
+              heading: 'AI-generated material can hide the difference between generation and direction.'
+            },
+            {
+              name: 'Reviewers',
+              route: '/reviewer.html',
+              cta: 'See the four review questions',
+              hash: '#review-questions',
+              target: '#review-questions',
+              heading: 'Four questions before you decide.'
+            }
+          ];
+
+          const viewports = [
+            ['desktop1440', 1440, 900],
+            ['mobile390', 390, 844],
+            ['mobile320', 320, 760]
+          ];
+
+          const browser = await chromium.launch({ headless: true });
+          const failures = [];
+          let checks = 0;
+          const check = (ok, scope, message) => {
+            checks += 1;
+            if (!ok) failures.push(`${scope}: ${message}`);
+          };
+
+          for (const [viewportName, width, height] of viewports) {
+            const context = await browser.newContext({ viewport: { width, height } });
+            const page = await context.newPage();
+
+            for (const item of cases) {
+              const scope = `${viewportName} ${item.name}`;
+              const response = await page.goto(BASE + item.route, { waitUntil: 'domcontentloaded', timeout: 30000 });
+              check(response?.status() === 200, scope, `page status ${response?.status()}`);
+
+              const cta = page.getByRole('link', { name: item.cta, exact: true });
+              check(await cta.count() === 1, scope, `expected exactly one hero CTA named “${item.cta}”`);
+
+              const target = page.locator(item.target);
+              check(await target.count() === 1, scope, `target ${item.target} must exist exactly once`);
+              check(await target.evaluate((el) => !el.closest('.hero')), scope, 'CTA target must be outside the hero it is leaving');
+
+              const beforeY = await page.evaluate(() => window.scrollY);
+              await cta.click();
+              await page.waitForFunction((hash) => window.location.hash === hash, item.hash, { timeout: 3000 });
+              await page.waitForTimeout(700);
+
+              const afterY = await page.evaluate(() => window.scrollY);
+              check(afterY > beforeY + 100, scope, `CTA should create meaningful vertical movement; before=${beforeY}, after=${afterY}`);
+              check(new URL(page.url()).hash === item.hash, scope, `expected URL hash ${item.hash}, got ${new URL(page.url()).hash}`);
+
+              const box = await target.boundingBox();
+              check(Boolean(box), scope, 'target must have a rendered box after click');
+              if (box) check(box.y < height && box.y + box.height > 0, scope, `target should enter viewport after click; y=${box.y}, h=${box.height}`);
+
+              const heading = target.getByRole('heading', { name: item.heading, exact: true });
+              check(await heading.count() === 1, scope, `expected destination heading “${item.heading}”`);
+              check(await heading.isVisible(), scope, 'destination heading should be visible after click');
+            }
+
+            await context.close();
+          }
+
+          await browser.close();
+
+          if (failures.length) {
+            console.error(`Hero CTA semantic QA failed: ${failures.length} failure(s) across ${checks} checks.`);
+            failures.forEach((failure) => console.error(`- ${failure}`));
+            process.exit(1);
+          }
+
+          console.log(`Hero CTA semantic QA passed: ${checks} checks across 4 pages × 3 viewports.`);
+          NODE
