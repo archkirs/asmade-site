@@ -6,19 +6,18 @@ const headerTemplate = fs.readFileSync(path.join(root, 'site-shell', 'header.htm
 const footerTemplate = fs.readFileSync(path.join(root, 'site-shell', 'footer.html'), 'utf8').trim();
 
 const preview = process.env.VERCEL_ENV !== 'production';
-const routes = preview
-  ? {
-      home: '/lab/v4/',
-      student: '/lab/v4/student.html',
-      artist: '/lab/v4/artist.html',
-      reviewer: '/lab/v4/reviewer.html',
-    }
-  : {
-      home: '/',
-      student: '/student.html',
-      artist: '/artist.html',
-      reviewer: '/reviewer.html',
-    };
+const canonicalRoutes = {
+  home: '/',
+  student: '/student.html',
+  artist: '/artist.html',
+  reviewer: '/reviewer.html',
+};
+const labRoutes = {
+  home: '/lab/v4/',
+  student: '/lab/v4/student.html',
+  artist: '/lab/v4/artist.html',
+  reviewer: '/lab/v4/reviewer.html',
+};
 
 const pages = [
   { file: 'lab/v4/index.html', active: 'home', footer: 'home', landing: 'general' },
@@ -55,6 +54,7 @@ function render(template, values) {
 }
 
 function valuesFor(page) {
+  const routes = page.file.startsWith('lab/v4/') ? labRoutes : canonicalRoutes;
   return {
     HOME_URL: routes.home,
     STUDENT_URL: routes.student,
@@ -129,4 +129,4 @@ for (const page of pages) {
   fs.writeFileSync(absolute, html, 'utf8');
 }
 
-console.log(`Patched shared AsMade shell on ${pages.length} pages (${preview ? 'preview' : 'production'} routes).`);
+console.log(`Patched shared AsMade shell on ${pages.length} pages (${preview ? 'preview' : 'production'} build; canonical audience routes preserved).`);
