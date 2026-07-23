@@ -20,6 +20,24 @@ html.v4-motion-enabled .fade.on {
   transform: none !important;
 }
 
+/* Legal hero panels must keep their dark surface fixed while the content rises.
+   Moving the whole panel briefly exposed the light document background beneath it. */
+html.v4-motion-enabled body.legal-utility-page .legal-hero.fade,
+html.v4-motion-enabled body.legal-utility-page .legal-hero.fade.on {
+  overflow: hidden;
+  transform: none !important;
+  transition: none !important;
+}
+
+html.v4-motion-enabled body.legal-utility-page .legal-hero.fade > * {
+  transform: translateY(16px);
+  transition: transform .55s ease;
+}
+
+html.v4-motion-enabled body.legal-utility-page .legal-hero.fade.on > * {
+  transform: none;
+}
+
 /* Keep deeper Record content readable and independent of scroll-linked opacity.
    The Record shell/tab interactions retain their own non-scroll functional motion. */
 body.record-demo-page .process-step,
@@ -35,7 +53,9 @@ body.record-demo-page .record-limitation {
 
 @media (prefers-reduced-motion: reduce) {
   html.v4-motion-enabled .fade,
-  html.v4-motion-enabled .fade.on {
+  html.v4-motion-enabled .fade.on,
+  html.v4-motion-enabled body.legal-utility-page .legal-hero.fade > *,
+  html.v4-motion-enabled body.legal-utility-page .legal-hero.fade.on > * {
     transform: none !important;
     transition: none !important;
   }
