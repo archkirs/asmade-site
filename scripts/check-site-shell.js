@@ -30,8 +30,32 @@ function hasNoindex(html) {
   return /<meta\s+name=["']robots["']\s+content=["'][^"']*\bnoindex\b[^"']*["'][^>]*>/i.test(html);
 }
 
+function parseJsonLdEntities(html, file, failures) {
+  const blocks = [...html.matchAll(/<script[^>]+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)];
+  const entities = [];
+
+  blocks.forEach((match, index) => {
+    try {
+      const value = JSON.parse(match[1]);
+      if (Array.isArray(value?.['@graph'])) {
+        entities.push(...value['@graph']);
+      } else {
+        entities.push(value);
+      }
+    } catch (error) {
+      failures.push(`${file}: JSON-LD block ${index + 1} parses as valid JSON`);
+    }
+  });
+
+  return entities.filter((entity) => entity && typeof entity === 'object');
+}
+
 const linkedinLink = '<a href="https://www.linkedin.com/company/useasmade" target="_blank" rel="noopener">LinkedIn</a>';
 const redditLink = '<a href="https://www.reddit.com/user/useasmade" target="_blank" rel="noopener">Reddit</a>';
+const expectedSameAs = [
+  'https://www.linkedin.com/company/useasmade',
+  'https://www.reddit.com/user/useasmade',
+];
 
 const failures = [];
 for (const file of pages) {
@@ -65,9 +89,31 @@ for (const file of pages) {
   }
 }
 
+const homeFile = 'index.html';
+const homeHtml = fs.readFileSync(path.join(root, homeFile), 'utf8');
+const homeJsonLd = parseJsonLdEntities(homeHtml, homeFile, failures);
+const websiteEntities = homeJsonLd.filter((entity) => entity['@type'] === 'WebSite');
+const organizationEntities = homeJsonLd.filter((entity) => entity['@type'] === 'Organization');
+const website = websiteEntities[0];
+const organization = organizationEntities[0];
+
+const structuredDataChecks = [
+  [websiteEntities.length === 1, 'exactly one WebSite JSON-LD entity'],
+  [website?.name === 'AsMade', 'WebSite JSON-LD keeps AsMade name'],
+  [website?.url === 'https://useasmade.com/', 'WebSite JSON-LD keeps canonical site URL'],
+  [organizationEntities.length === 1, 'exactly one Organization JSON-LD entity'],
+  [organization?.name === 'AsMade', 'Organization JSON-LD uses AsMade name'],
+  [organization?.url === 'https://useasmade.com/', 'Organization JSON-LD uses canonical site URL'],
+  [JSON.stringify(organization?.sameAs) === JSON.stringify(expectedSameAs), 'Organization JSON-LD uses exact official LinkedIn and Reddit sameAs URLs'],
+];
+
+for (const [ok, label] of structuredDataChecks) {
+  if (!ok) failures.push(`${homeFile}: ${label}`);
+}
+
 if (failures.length) {
   console.error('Shared site shell QA failed:\n' + failures.map((item) => `- ${item}`).join('\n'));
   process.exit(1);
 }
 
-console.log(`Shared site shell QA passed on ${pages.length} pages.`);
+console.log(`Shared site shell QA passed on ${pages.length} pages, including Home structured data.`);
