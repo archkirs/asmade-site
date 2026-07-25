@@ -30,6 +30,9 @@ function hasNoindex(html) {
   return /<meta\s+name=["']robots["']\s+content=["'][^"']*\bnoindex\b[^"']*["'][^>]*>/i.test(html);
 }
 
+const linkedinLink = '<a href="https://www.linkedin.com/company/useasmade" target="_blank" rel="noopener">LinkedIn</a>';
+const redditLink = '<a href="https://www.reddit.com/user/useasmade" target="_blank" rel="noopener">Reddit</a>';
+
 const failures = [];
 for (const file of pages) {
   const html = fs.readFileSync(path.join(root, file), 'utf8');
@@ -39,9 +42,13 @@ for (const file of pages) {
     [count(html, /class="asmade-header"/g) === 1, 'shared header'],
     [count(html, /class="asmade-footer"/g) === 1, 'shared footer'],
     [count(html, /class="asmade-nav-link"/g) === 5, 'five primary nav cells'],
+    [count(html, /class="asmade-footer-group"/g) === 4, 'four footer groups'],
     [html.includes('<p class="asmade-footer-heading">Site</p>'), 'Site footer group'],
     [html.includes('<p class="asmade-footer-heading">Project</p>'), 'Project footer group'],
+    [html.includes('<p class="asmade-footer-heading">Follow</p>'), 'Follow footer group'],
     [html.includes('<p class="asmade-footer-heading">Legal</p>'), 'Legal footer group'],
+    [html.includes(linkedinLink), 'official LinkedIn footer link'],
+    [html.includes(redditLink), 'official Reddit footer link'],
     [html.includes('/site-shell.css'), 'shared shell stylesheet'],
     [html.includes('/v4-content-safety.css'), 'content visibility guard'],
     [html.includes('v4-motion-enabled'), 'progressive motion init'],
