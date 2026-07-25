@@ -1,0 +1,73 @@
+name: Browser translation layout QA
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - index.html
+      - student.html
+      - artist.html
+      - reviewer.html
+      - records.html
+      - sample-comic.html
+      - sample-cv.html
+      - about.html
+      - contact/**
+      - privacy.html
+      - terms.html
+      - pilot-notice.html
+      - site-shell/**
+      - site-shell.css
+      - v4-content-safety.css
+      - v4-site.css
+      - lab/v4/**
+      - scripts/patch-site-shell.js
+      - scripts/check-translation-layout.mjs
+      - .github/workflows/translation-layout-qa.yml
+
+permissions:
+  contents: read
+
+jobs:
+  translation-layout:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install Playwright Chromium
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Apply the same shared-shell build patches used by Vercel
+        run: npm run postinstall
+      - name: Prepare canonical V4 assets for local serving
+        run: |
+          cp lab/v4/v4.css v4-audience-base.css
+          cp lab/v4/audience.css v4-audience-pages.css
+          cp lab/v4/polish.css v4-audience-polish.css
+          cp lab/v4/audience.js audience.js
+      - name: Start local static site
+        run: |
+          python3 -m http.server 4173 > /tmp/asmade-translation-qa-server.log 2>&1 &
+          echo $! > /tmp/asmade-translation-qa-server.pid
+      - name: Verify English and representative Russian-translated layouts
+        id: translation_qa
+        continue-on-error: true
+        run: node scripts/check-translation-layout.mjs
+      - name: Upload translation layout QA report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: translation-layout-qa-report
+          path: translation-layout-qa.log
+          if-no-files-found: error
+          retention-days: 7
+      - name: Fail when translation layout QA failed
+        if: steps.translation_qa.outcome == 'failure'
+        run: |
+          cat translation-layout-qa.log
+          exit 1

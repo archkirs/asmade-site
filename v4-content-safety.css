@@ -51,6 +51,264 @@ body.record-demo-page .record-limitation {
   animation-timeline: auto !important;
 }
 
+/* Browser translation can make labels and controls substantially longer and may
+   insert nested inline wrapper elements. Keep responsive grid/flex items shrinkable
+   so translated min-content cannot widen the document beyond the viewport. */
+.v4-nav > *,
+.asmade-header-inner > *,
+.hero > *,
+.hero-copy,
+.trace-card,
+.audience-hero-card,
+.trace-work > *,
+.trace-work-copy,
+.audience-card-head > *,
+.audience-note > *,
+.asmade-primary-nav,
+.asmade-footer-main > *,
+.asmade-footer-links > *,
+.records-v4-hero,
+.records-v4-inner,
+.records-v4-head > *,
+.records-v4-grid > *,
+.record-v4-card,
+.record-v4-content,
+.record-v4-content > *,
+.record-v4-meta,
+.record-v4-meta > *,
+.editorial-v4-hero,
+.editorial-v4-inner,
+.editorial-v4-intro-grid > *,
+.editorial-v4-split > *,
+.editorial-v4-copy,
+.editorial-v4-action-row,
+.editorial-v4-team-grid > *,
+.editorial-v4-small-grid > *,
+.editorial-v4-operator > *,
+.editorial-v4-operator dl,
+.editorial-v4-operator dl > div > *,
+.contact-v4-grid > *,
+.contact-v4-aside,
+.contact-v4-form-card,
+body.v4-editorial-page .contact-form,
+body.v4-editorial-page .form-field,
+body.v4-editorial-page .form-submit-row,
+body.legal-utility-page .legal-hero > *,
+body.legal-utility-page .legal-content,
+body.legal-utility-page .legal-section,
+body.legal-utility-page .legal-section > *,
+body.legal-utility-page .business-details,
+body.legal-utility-page .business-details > div > *,
+body.legal-utility-page .notice-card,
+body.legal-utility-page .page-meta,
+body.record-demo-page main,
+body.record-demo-page .record-file,
+body.record-demo-page .record-file-header > *,
+body.record-demo-page .record-file-meta,
+body.record-demo-page .record-meta-item,
+body.record-demo-page .record-file-panel,
+body.record-demo-page .record-primary-grid > *,
+body.record-demo-page .work-preview,
+body.record-demo-page .record-identity-row > *,
+body.record-demo-page .principal-findings-head > *,
+body.record-demo-page .finding-item > *,
+body.record-demo-page .finding-actions,
+body.record-demo-page .evidence-layout > * {
+  min-width: 0;
+}
+
+.hero,
+.hero-copy,
+.trace-card,
+.audience-hero-card,
+.records-v4-hero,
+.records-v4-inner,
+.record-v4-card,
+.record-v4-content,
+.editorial-v4-hero,
+.editorial-v4-inner,
+.contact-v4-form-card,
+body.legal-utility-page .legal-hero > *,
+body.legal-utility-page .legal-content,
+body.legal-utility-page .legal-section,
+body.record-demo-page main,
+body.record-demo-page .record-file,
+body.record-demo-page .record-file-panel {
+  max-width: 100%;
+}
+
+.hero h1,
+.hero-lede,
+.trace-work-copy h2,
+.trace-detail h3,
+.trace-detail p,
+.audience-card-head,
+.audience-card-body,
+.audience-card-body h2,
+.audience-card-body p,
+.audience-detail strong,
+.audience-detail p,
+.audience-note,
+.records-v4-hero h1,
+.records-v4-hero p,
+.records-v4-head h2,
+.records-v4-head p,
+.record-v4-content h3,
+.record-v4-content p,
+.record-v4-meta,
+.record-v4-open,
+.editorial-v4-hero h1,
+.editorial-v4-hero .hero-lede,
+.editorial-v4-section-title,
+.editorial-v4-copy,
+.editorial-v4-copy p,
+.editorial-v4-copy li,
+.editorial-v4-notice,
+.editorial-v4-team-card,
+.editorial-v4-team-card h3,
+.editorial-v4-team-card p,
+.editorial-v4-small-card,
+.editorial-v4-small-card h2,
+.editorial-v4-small-card p,
+.editorial-v4-operator dt,
+.editorial-v4-operator dd,
+.contact-v4-aside h2,
+.contact-v4-aside p,
+.contact-v4-form-card > h2,
+.contact-v4-form-card > p,
+body.legal-utility-page .legal-hero h1,
+body.legal-utility-page .legal-hero .hero-lede,
+body.legal-utility-page .page-meta,
+body.legal-utility-page .legal-section h2,
+body.legal-utility-page .legal-section h3,
+body.legal-utility-page .legal-section p,
+body.legal-utility-page .legal-section li,
+body.legal-utility-page .business-details dt,
+body.legal-utility-page .business-details dd,
+body.legal-utility-page .notice-card,
+body.record-demo-page .record-file-product,
+body.record-demo-page .record-meta-item,
+body.record-demo-page .record-tab-title,
+body.record-demo-page .record-tab-lede,
+body.record-demo-page .record-identity-row,
+body.record-demo-page .record-result,
+body.record-demo-page .principal-findings-head,
+body.record-demo-page .finding-copy,
+body.record-demo-page .work-preview-caption,
+.asmade-footer-brand p,
+.asmade-footer-legal p {
+  overflow-wrap: break-word;
+}
+
+.record-v4-open,
+.editorial-v4-action-row .v4-action,
+.editorial-v4-secondary-action,
+body.v4-editorial-page .primary-button,
+body.record-demo-page .record-link-button,
+body.record-demo-page .record-export-button,
+body.record-demo-page .finding-button,
+body.record-demo-page .evidence-selector,
+body.record-demo-page .evidence-status,
+body.record-demo-page .access-badge,
+body.record-demo-page .role-badge,
+body.legal-utility-page a,
+.editorial-v4-copy a,
+.editorial-v4-team-card a,
+.editorial-v4-small-card a,
+.contact-v4-aside .direct-email {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 820px) {
+  .v4-nav,
+  .asmade-header-inner {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .nav-cta,
+  .v4-nav-cta,
+  .asmade-header-cta {
+    min-width: 0;
+    max-width: min(220px, calc(100vw - 124px));
+    height: auto;
+    padding-top: 7px;
+    padding-bottom: 7px;
+    line-height: 1.25;
+    text-align: center;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .audience-nav a,
+  .v4-primary-nav a,
+  .asmade-nav-link {
+    min-width: 0;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .record-v4-meta,
+  body.record-demo-page .record-file-meta,
+  body.record-demo-page .principal-findings-head,
+  body.record-demo-page .finding-actions {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 680px) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .hero-actions {
+    grid-template-columns: minmax(0, 1fr);
+    min-width: 0;
+  }
+
+  .hero-actions .pill,
+  .close .pill,
+  .record-v4-open,
+  .editorial-v4-action-row .v4-action,
+  .editorial-v4-secondary-action,
+  body.v4-editorial-page .primary-button,
+  body.record-demo-page .record-link-button,
+  body.record-demo-page .record-export-button,
+  body.record-demo-page .finding-button,
+  body.record-demo-page .evidence-selector {
+    min-width: 0;
+    max-width: 100%;
+    height: auto;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    line-height: 1.3;
+    text-align: center;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .trace-work {
+    grid-template-columns: 108px minmax(0, 1fr);
+  }
+
+  .trace-top,
+  .trace-footer,
+  .audience-card-head,
+  .audience-note,
+  .record-v4-meta,
+  body.legal-utility-page .page-meta,
+  body.record-demo-page .record-file-meta,
+  body.record-demo-page .work-preview-caption,
+  body.record-demo-page .principal-findings-head,
+  body.record-demo-page .finding-actions {
+    flex-wrap: wrap;
+  }
+
+  .record-v4-open {
+    width: auto;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html.v4-motion-enabled .fade,
   html.v4-motion-enabled .fade.on,
